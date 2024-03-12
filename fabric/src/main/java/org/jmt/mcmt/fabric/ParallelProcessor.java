@@ -10,8 +10,9 @@ import net.minecraft.world.chunk.BlockEntityTickInvoker;
 import net.minecraft.world.chunk.WorldChunk;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jmt.mcmt.fabric.config.BlockEntityLists;
-import org.jmt.mcmt.fabric.config.GeneralConfig;
+import org.jmt.mcmt.MCMT;
+import org.jmt.mcmt.config.BlockEntityLists;
+import org.jmt.mcmt.config.GeneralConfig;
 import org.jmt.mcmt.fabric.serdes.SerDesHookTypes;
 import org.jmt.mcmt.fabric.serdes.SerDesRegistry;
 import org.jmt.mcmt.fabric.serdes.filter.ISerDesFilter;
@@ -39,7 +40,7 @@ public class ParallelProcessor {
     public static void setupThreadPool(int parallelism) {
         AtomicInteger worldPoolThreadID = new AtomicInteger();
         AtomicInteger tickPoolThreadID = new AtomicInteger();
-        final ClassLoader cl = MCMT.class.getClassLoader();
+        final ClassLoader cl = MCMTFabric.class.getClassLoader();
         ForkJoinPool.ForkJoinWorkerThreadFactory worldThreadFactory = p -> {
             ForkJoinWorkerThread fjwt = ForkJoinPool.defaultForkJoinWorkerThreadFactory.newThread(p);
             fjwt.setName("MCMT-World-Pool-Thread-" + worldPoolThreadID.getAndIncrement());

@@ -10,20 +10,20 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import com.google.common.collect.Multimap;
 import java.util.function.Consumer;
 
-import org.jmt.mcmt.ExampleMod;
+import org.jmt.mcmt.MCMT;
 
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimaps;
 
-@Mod(ExampleMod.MOD_ID)
-public class ExampleModForge {
+@Mod(MCMT.MOD_ID)
+public class MCMTForge {
     private static final Map<String, IEventBus> EVENT_BUS_MAP = Collections.synchronizedMap(new HashMap<>());
     private static final Multimap<String, Consumer<IEventBus>> ON_REGISTERED = Multimaps.synchronizedMultimap(LinkedListMultimap.create());
 
-    public ExampleModForge() {
+    public MCMTForge() {
         // Submit our event bus to let architectury register our content on the right time
-        registerModEventBus(ExampleMod.MOD_ID, FMLJavaModLoadingContext.get().getModEventBus());
-        ExampleMod.init();
+        registerModEventBus(MCMT.MOD_ID, FMLJavaModLoadingContext.get().getModEventBus());
+        MCMT.init();
     }
 
     public static void registerModEventBus(String modId, IEventBus bus) {

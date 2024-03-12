@@ -7,7 +7,8 @@ import net.minecraft.world.chunk.BlockEntityTickInvoker;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ReadOnlyChunk;
 
-import org.jmt.mcmt.fabric.MCMT;
+import org.jmt.mcmt.MCMT;
+import org.jmt.mcmt.fabric.MCMTFabric;
 import org.jmt.mcmt.fabric.ParallelProcessor;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;

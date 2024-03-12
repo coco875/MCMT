@@ -1,4 +1,4 @@
-package org.jmt.mcmt.fabric.config;
+package org.jmt.mcmt.config;
 
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 

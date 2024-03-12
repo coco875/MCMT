@@ -1,4 +1,4 @@
-package org.jmt.mcmt.fabric.config;
+package org.jmt.mcmt.config;
 
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigData;
@@ -9,7 +9,7 @@ import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jmt.mcmt.fabric.MCMT;
+import org.jmt.mcmt.MCMT;
 
 @Config(name = "mcmtfabric")
 public class GeneralConfig implements ConfigData {

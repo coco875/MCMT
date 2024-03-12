@@ -18,7 +18,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
-import org.jmt.mcmt.fabric.MCMT;
+import org.jmt.mcmt.MCMT;
+import org.jmt.mcmt.fabric.MCMTFabric;
 import org.jmt.mcmt.fabric.ParallelProcessor;
 
 import javax.annotation.Nullable;

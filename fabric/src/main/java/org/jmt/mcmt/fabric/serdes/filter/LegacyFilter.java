@@ -4,9 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.jmt.mcmt.fabric.MCMT;
-import org.jmt.mcmt.fabric.config.BlockEntityLists;
-import org.jmt.mcmt.fabric.config.GeneralConfig;
+import org.jmt.mcmt.fabric.MCMTFabric;
+import org.jmt.mcmt.config.BlockEntityLists;
+import org.jmt.mcmt.config.GeneralConfig;
 import org.jmt.mcmt.fabric.serdes.ISerDesHookType;
 import org.jmt.mcmt.fabric.serdes.SerDesRegistry;
 import org.jmt.mcmt.fabric.serdes.pools.ChunkLockPool;

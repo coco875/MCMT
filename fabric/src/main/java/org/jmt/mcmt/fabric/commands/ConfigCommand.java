@@ -16,10 +16,11 @@ import net.minecraft.world.chunk.BlockEntityTickInvoker;
 
 import static net.minecraft.server.command.CommandManager.literal;
 
-import org.jmt.mcmt.fabric.MCMT;
+import org.jmt.mcmt.fabric.MCMTFabric;
 import org.jmt.mcmt.fabric.ParallelProcessor;
-import org.jmt.mcmt.fabric.config.BlockEntityLists;
-import org.jmt.mcmt.fabric.config.GeneralConfig;
+import org.jmt.mcmt.MCMT;
+import org.jmt.mcmt.config.BlockEntityLists;
+import org.jmt.mcmt.config.GeneralConfig;
 
 public class ConfigCommand {
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {

@@ -8,9 +8,10 @@ import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jmt.mcmt.fabric.MCMT;
+import org.jmt.mcmt.MCMT;
+import org.jmt.mcmt.config.GeneralConfig;
+import org.jmt.mcmt.fabric.MCMTFabric;
 import org.jmt.mcmt.fabric.ParallelProcessor;
-import org.jmt.mcmt.fabric.config.GeneralConfig;
 
 import java.io.FileWriter;
 import java.text.SimpleDateFormat;
