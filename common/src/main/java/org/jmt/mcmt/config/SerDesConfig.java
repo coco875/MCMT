@@ -6,7 +6,6 @@ import com.electronwill.nightconfig.core.file.FileConfig;
 import com.electronwill.nightconfig.core.file.NoFormatFoundException;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Lists;
-import net.fabricmc.loader.api.FabricLoader;
 
 import javax.annotation.Nullable;
 
@@ -231,7 +230,7 @@ public class SerDesConfig {
     }
 
     public static void createFilterConfig(String name, Integer priority, List<String> whitelist, List<String> blacklist, @Nullable String pool) {
-        java.nio.file.Path saveTo = FabricLoader.getInstance().getConfigDir().resolve("mcmt-serdes").resolve(name + ".toml");
+        java.nio.file.Path saveTo = MCMT.CONFIGDIR.resolve("mcmt-serdes").resolve(name + ".toml");
         FilterConfig fc = new FilterConfig(priority, name, whitelist, blacklist, pool == null ? "LEGACY" : pool, Config.inMemory());
         FileConfig config = FileConfig.builder(saveTo).build();
         config.set("filters", Lists.newArrayList(OBJECT_CONVERTER.toConfig(fc, Config::inMemoryUniversal)));
