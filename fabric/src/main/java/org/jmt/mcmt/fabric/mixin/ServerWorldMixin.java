@@ -14,7 +14,7 @@ import net.minecraft.world.chunk.ChunkStatusChangeListener;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.level.storage.LevelStorage;
 
-import org.jmt.mcmt.fabric.ParallelProcessor;
+import org.jmt.mcmt.ParallelProcessor;
 import org.jmt.mcmt.fabric.parallelised.ConcurrentCollections;
 import org.jmt.mcmt.fabric.parallelised.ParaServerChunkProvider;
 import org.objectweb.asm.Opcodes;

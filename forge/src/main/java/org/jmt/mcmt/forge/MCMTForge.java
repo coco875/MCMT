@@ -7,6 +7,8 @@ import java.util.Map;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.loading.FMLPaths;
+
 import com.google.common.collect.Multimap;
 import java.util.function.Consumer;
 
@@ -21,9 +23,10 @@ public class MCMTForge {
     private static final Multimap<String, Consumer<IEventBus>> ON_REGISTERED = Multimaps.synchronizedMultimap(LinkedListMultimap.create());
 
     public MCMTForge() {
+        MCMT.init();
+        MCMT.CONFIGDIR = FMLPaths.CONFIGDIR.get();
         // Submit our event bus to let architectury register our content on the right time
         registerModEventBus(MCMT.MOD_ID, FMLJavaModLoadingContext.get().getModEventBus());
-        MCMT.init();
     }
 
     public static void registerModEventBus(String modId, IEventBus bus) {

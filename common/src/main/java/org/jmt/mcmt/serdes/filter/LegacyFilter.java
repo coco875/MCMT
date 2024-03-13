@@ -1,17 +1,15 @@
-package org.jmt.mcmt.fabric.serdes.filter;
+package org.jmt.mcmt.serdes.filter;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.jmt.mcmt.fabric.MCMTFabric;
 import org.jmt.mcmt.config.BlockEntityLists;
-import org.jmt.mcmt.config.GeneralConfig;
-import org.jmt.mcmt.fabric.serdes.ISerDesHookType;
-import org.jmt.mcmt.fabric.serdes.SerDesRegistry;
-import org.jmt.mcmt.fabric.serdes.pools.ChunkLockPool;
-import org.jmt.mcmt.fabric.serdes.pools.ISerDesPool;
-import org.jmt.mcmt.fabric.serdes.pools.ISerDesPool.ISerDesOptions;
+import org.jmt.mcmt.serdes.SerDesRegistry;
+import org.jmt.mcmt.serdes.pools.ChunkLockPool;
+import org.jmt.mcmt.serdes.pools.ISerDesPool;
+import org.jmt.mcmt.serdes.pools.ISerDesPool.ISerDesOptions;
+import org.jmt.mcmt.serdes.ISerDesHookType;
 
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;

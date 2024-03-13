@@ -1,8 +1,7 @@
-package org.jmt.mcmt.fabric.serdes.filter;
+package org.jmt.mcmt.serdes.filter;
 
-import org.jmt.mcmt.fabric.serdes.ISerDesHookType;
+import org.jmt.mcmt.serdes.ISerDesHookType;
 
-import net.minecraft.block.entity.PistonBlockEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 

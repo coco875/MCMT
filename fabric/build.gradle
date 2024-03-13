@@ -32,11 +32,6 @@ dependencies {
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
-
-    modImplementation 'com.electronwill.night-config:toml:3.6.6'
-
-    include group: 'com.electronwill.night-config', name: 'toml', version: '3.6.6'
-    include group: 'com.electronwill.night-config', name: 'core', version: '3.6.6'
 }
 
 processResources {

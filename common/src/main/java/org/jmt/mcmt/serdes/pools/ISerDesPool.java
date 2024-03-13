@@ -1,4 +1,4 @@
-package org.jmt.mcmt.fabric.serdes.pools;
+package org.jmt.mcmt.serdes.pools;
 
 import java.util.Map;
 

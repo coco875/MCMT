@@ -1,4 +1,4 @@
-package org.jmt.mcmt.fabric.serdes;
+package org.jmt.mcmt.serdes;
 
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.entity.Entity;

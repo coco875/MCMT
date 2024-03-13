@@ -2,7 +2,7 @@ package org.jmt.mcmt.fabric.mixin;
 
 import net.minecraft.util.Util;
 
-import org.jmt.mcmt.fabric.ParallelProcessor;
+import org.jmt.mcmt.ParallelProcessor;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

@@ -1,4 +1,4 @@
-package org.jmt.mcmt.fabric.commands;
+package org.jmt.mcmt.commands;
 
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 
@@ -10,8 +10,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jmt.mcmt.MCMT;
 import org.jmt.mcmt.config.GeneralConfig;
-import org.jmt.mcmt.fabric.MCMTFabric;
-import org.jmt.mcmt.fabric.ParallelProcessor;
+import org.jmt.mcmt.ParallelProcessor;
 
 import java.io.FileWriter;
 import java.text.SimpleDateFormat;

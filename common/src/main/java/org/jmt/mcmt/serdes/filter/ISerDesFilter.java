@@ -1,11 +1,11 @@
-package org.jmt.mcmt.fabric.serdes.filter;
+package org.jmt.mcmt.serdes.filter;
 
 import java.util.Set;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import org.jmt.mcmt.fabric.serdes.ISerDesHookType;
+import org.jmt.mcmt.serdes.ISerDesHookType;
 
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;

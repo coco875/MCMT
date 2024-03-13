@@ -1,4 +1,4 @@
-package org.jmt.mcmt.fabric.config;
+package org.jmt.mcmt.config;
 
 import com.electronwill.nightconfig.core.Config;
 import com.electronwill.nightconfig.core.conversion.*;
@@ -9,6 +9,9 @@ import com.google.common.collect.Lists;
 import net.fabricmc.loader.api.FabricLoader;
 
 import javax.annotation.Nullable;
+
+import org.jmt.mcmt.MCMT;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.*;
@@ -168,7 +171,7 @@ public class SerDesConfig {
     public static void loadConfigs() {
         filters = new HashMap<>();
         pools = new HashMap<>();
-        java.nio.file.Path cfgDir = FabricLoader.getInstance().getConfigDir();
+        java.nio.file.Path cfgDir = MCMT.CONFIGDIR;
         java.nio.file.Path serdesDir = cfgDir.resolve("mcmt-serdes");
         if (Files.isDirectory(serdesDir)) {
 

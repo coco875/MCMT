@@ -1,4 +1,4 @@
-package org.jmt.mcmt.fabric.serdes.filter;
+package org.jmt.mcmt.serdes.filter;
 
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -9,10 +9,10 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
-import org.jmt.mcmt.fabric.config.SerDesConfig;
-import org.jmt.mcmt.fabric.serdes.ISerDesHookType;
-import org.jmt.mcmt.fabric.serdes.SerDesRegistry;
-import org.jmt.mcmt.fabric.serdes.pools.ISerDesPool;
+import org.jmt.mcmt.config.SerDesConfig;
+import org.jmt.mcmt.serdes.SerDesRegistry;
+import org.jmt.mcmt.serdes.pools.ISerDesPool;
+import org.jmt.mcmt.serdes.ISerDesHookType;
 
 public class GenericConfigFilter implements ISerDesFilter {
 

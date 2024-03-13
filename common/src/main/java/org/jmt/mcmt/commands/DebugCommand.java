@@ -1,4 +1,4 @@
-package org.jmt.mcmt.fabric.commands;
+package org.jmt.mcmt.commands;
 
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.minecraft.block.BlockState;

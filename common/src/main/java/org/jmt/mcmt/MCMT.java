@@ -7,11 +7,13 @@ import net.minecraft.util.ActionResult;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jmt.mcmt.config.GeneralConfig;
+import java.nio.file.Path;
 
 public class MCMT {
     public static final String MOD_ID = "mcmt";
     public static final Logger LOGGER = LogManager.getLogger();
     public static GeneralConfig config;
+    public static Path CONFIGDIR;
     
     public static void init() {        
         // This code runs as soon as Minecraft is in a mod-load-ready state.

@@ -1,8 +1,8 @@
-package org.jmt.mcmt.fabric.serdes.pools;
+package org.jmt.mcmt.serdes.pools;
 
 import javax.annotation.Nullable;
 
-import org.jmt.mcmt.fabric.parallelised.ChunkLock;
+import org.jmt.mcmt.parallelised.ChunkLock;
 
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;

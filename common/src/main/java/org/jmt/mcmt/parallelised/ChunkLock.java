@@ -1,4 +1,4 @@
-package org.jmt.mcmt.fabric.parallelised;
+package org.jmt.mcmt.parallelised;
 
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;

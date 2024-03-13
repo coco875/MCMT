@@ -1,4 +1,4 @@
-package org.jmt.mcmt.fabric.serdes;
+package org.jmt.mcmt.serdes;
 
 public interface ISerDesHookType {
 

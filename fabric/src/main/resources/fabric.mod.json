@@ -16,10 +16,10 @@
   "environment": "*",
   "entrypoints": {
     "preLaunch": [
-      "net.himeki.mcmtfabric.syncfu.SyncFuTransformer"
+      "org.jmt.mcmt.fabric.syncfu.SyncFuTransformer"
     ],
     "main": [
-      "net.himeki.mcmtfabric.MCMT"
+      "org.jmt.mcmt.fabric.MCMTFabric"
     ]
   },
   "accessWidener": "mcmtfabric.accesswidener",

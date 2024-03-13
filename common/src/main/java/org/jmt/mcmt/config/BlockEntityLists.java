@@ -1,7 +1,5 @@
 package org.jmt.mcmt.config;
 
-import me.shedaniel.autoconfig.annotation.ConfigEntry;
-
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 

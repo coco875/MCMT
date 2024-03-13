@@ -1,4 +1,4 @@
-package org.jmt.mcmt.fabric.serdes;
+package org.jmt.mcmt.serdes;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -14,17 +14,16 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jmt.mcmt.fabric.MCMTFabric;
 import org.jmt.mcmt.MCMT;
 import org.jmt.mcmt.config.BlockEntityLists;
 import org.jmt.mcmt.config.GeneralConfig;
-import org.jmt.mcmt.fabric.config.SerDesConfig;
-import org.jmt.mcmt.fabric.serdes.filter.*;
-import org.jmt.mcmt.fabric.serdes.pools.ChunkLockPool;
-import org.jmt.mcmt.fabric.serdes.pools.ISerDesPool;
-import org.jmt.mcmt.fabric.serdes.pools.PostExecutePool;
-import org.jmt.mcmt.fabric.serdes.pools.SingleExecutionPool;
-import org.jmt.mcmt.fabric.serdes.pools.ISerDesPool.ISerDesOptions;
+import org.jmt.mcmt.config.SerDesConfig;
+import org.jmt.mcmt.serdes.filter.*;
+import org.jmt.mcmt.serdes.pools.ChunkLockPool;
+import org.jmt.mcmt.serdes.pools.ISerDesPool;
+import org.jmt.mcmt.serdes.pools.PostExecutePool;
+import org.jmt.mcmt.serdes.pools.SingleExecutionPool;
+import org.jmt.mcmt.serdes.pools.ISerDesPool.ISerDesOptions;
 
 /**
  * Fully modular filtering

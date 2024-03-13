@@ -1,4 +1,4 @@
-package org.jmt.mcmt.fabric.commands;
+package org.jmt.mcmt.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.ArgumentBuilder;
@@ -16,8 +16,7 @@ import net.minecraft.world.chunk.BlockEntityTickInvoker;
 
 import static net.minecraft.server.command.CommandManager.literal;
 
-import org.jmt.mcmt.fabric.MCMTFabric;
-import org.jmt.mcmt.fabric.ParallelProcessor;
+import org.jmt.mcmt.ParallelProcessor;
 import org.jmt.mcmt.MCMT;
 import org.jmt.mcmt.config.BlockEntityLists;
 import org.jmt.mcmt.config.GeneralConfig;
