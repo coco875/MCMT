@@ -6,7 +6,7 @@ import net.minecraft.server.world.ChunkHolder;
 import net.minecraft.server.world.ThreadedAnvilChunkStorage;
 import net.minecraft.world.storage.VersionedChunkStorage;
 
-import org.jmt.mcmt.fabric.parallelised.fastutil.Int2ObjectConcurrentHashMap;
+import org.jmt.mcmt.parallelised.fastutil.Int2ObjectConcurrentHashMap;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;

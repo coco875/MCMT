@@ -6,7 +6,7 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.HeightLimitView;
 import net.minecraft.world.chunk.light.LightingProvider;
 
-import org.jmt.mcmt.fabric.parallelised.fastutil.ConcurrentShortHashSet;
+import org.jmt.mcmt.parallelised.fastutil.ConcurrentShortHashSet;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;

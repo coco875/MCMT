@@ -1,4 +1,4 @@
-package org.jmt.mcmt.fabric.parallelised.pooling;
+package org.jmt.mcmt.parallelised.pooling;
 
 import java.util.ArrayList;
 import java.util.List;

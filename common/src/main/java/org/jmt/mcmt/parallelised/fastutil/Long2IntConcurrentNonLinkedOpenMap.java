@@ -1,4 +1,4 @@
-package org.jmt.mcmt.fabric.parallelised.fastutil;
+package org.jmt.mcmt.parallelised.fastutil;
 
 import it.unimi.dsi.fastutil.Hash;
 import it.unimi.dsi.fastutil.ints.IntCollection;

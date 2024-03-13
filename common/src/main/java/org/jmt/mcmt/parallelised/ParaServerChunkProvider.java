@@ -1,4 +1,4 @@
-package org.jmt.mcmt.fabric.parallelised;
+package org.jmt.mcmt.parallelised;
 
 import com.mojang.datafixers.DataFixer;
 
@@ -20,7 +20,6 @@ import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
 import org.jmt.mcmt.MCMT;
 import org.jmt.mcmt.ParallelProcessor;
-import org.jmt.mcmt.parallelised.ChunkLock;
 
 import javax.annotation.Nullable;
 import java.lang.ref.WeakReference;

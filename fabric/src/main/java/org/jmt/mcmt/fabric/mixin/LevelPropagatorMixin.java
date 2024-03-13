@@ -4,8 +4,8 @@ import it.unimi.dsi.fastutil.longs.Long2ByteMap;
 import it.unimi.dsi.fastutil.longs.LongLinkedOpenHashSet;
 import net.minecraft.world.chunk.light.LevelPropagator;
 
-import org.jmt.mcmt.fabric.parallelised.fastutil.ConcurrentLongLinkedOpenHashSet;
-import org.jmt.mcmt.fabric.parallelised.fastutil.Long2ByteConcurrentHashMap;
+import org.jmt.mcmt.parallelised.fastutil.ConcurrentLongLinkedOpenHashSet;
+import org.jmt.mcmt.parallelised.fastutil.Long2ByteConcurrentHashMap;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;

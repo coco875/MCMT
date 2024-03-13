@@ -1,4 +1,4 @@
-package org.jmt.mcmt.fabric.parallelised.fastutil;
+package org.jmt.mcmt.parallelised.fastutil;
 
 import java.util.Collection;
 import java.util.Iterator;

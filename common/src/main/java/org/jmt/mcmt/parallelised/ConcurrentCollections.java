@@ -1,4 +1,4 @@
-package org.jmt.mcmt.fabric.parallelised;
+package org.jmt.mcmt.parallelised;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

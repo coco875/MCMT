@@ -4,7 +4,7 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.EntityList;
 
-import org.jmt.mcmt.fabric.parallelised.fastutil.Int2ObjectConcurrentHashMap;
+import org.jmt.mcmt.parallelised.fastutil.Int2ObjectConcurrentHashMap;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;

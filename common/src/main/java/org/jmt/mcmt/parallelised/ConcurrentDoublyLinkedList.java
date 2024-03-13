@@ -1,4 +1,4 @@
-package org.jmt.mcmt.fabric.parallelised;
+package org.jmt.mcmt.parallelised;
 
 /*
  * From: http://www.java2s.com/Code/Java/Collections-Data-Structure/ConcurrentDoublyLinkedList.htm

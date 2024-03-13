@@ -8,8 +8,8 @@ import net.minecraft.util.collection.SortedArraySet;
 import net.minecraft.world.ChunkPosDistanceLevelPropagator;
 import net.minecraft.world.SimulationDistanceLevelPropagator;
 
-import org.jmt.mcmt.fabric.parallelised.fastutil.Long2ByteConcurrentHashMap;
-import org.jmt.mcmt.fabric.parallelised.fastutil.Long2ObjectOpenConcurrentHashMap;
+import org.jmt.mcmt.parallelised.fastutil.Long2ByteConcurrentHashMap;
+import org.jmt.mcmt.parallelised.fastutil.Long2ObjectOpenConcurrentHashMap;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;

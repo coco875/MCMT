@@ -4,8 +4,8 @@ import it.unimi.dsi.fastutil.longs.LongSet;
 import net.minecraft.server.world.ChunkHolder;
 import net.minecraft.server.world.ChunkTicketManager;
 
-import org.jmt.mcmt.fabric.parallelised.ConcurrentCollections;
-import org.jmt.mcmt.fabric.parallelised.fastutil.ConcurrentLongLinkedOpenHashSet;
+import org.jmt.mcmt.parallelised.ConcurrentCollections;
+import org.jmt.mcmt.parallelised.fastutil.ConcurrentLongLinkedOpenHashSet;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;

@@ -4,7 +4,7 @@ import it.unimi.dsi.fastutil.longs.LongSortedSet;
 import net.minecraft.world.entity.EntityLike;
 import net.minecraft.world.entity.SectionedEntityCache;
 
-import org.jmt.mcmt.fabric.parallelised.fastutil.ConcurrentLongSortedSet;
+import org.jmt.mcmt.parallelised.fastutil.ConcurrentLongSortedSet;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;

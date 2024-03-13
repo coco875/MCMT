@@ -1,4 +1,4 @@
-package org.jmt.mcmt.fabric.parallelised.fastutil;
+package org.jmt.mcmt.parallelised.fastutil;
 
 import it.unimi.dsi.fastutil.bytes.ByteCollection;
 import it.unimi.dsi.fastutil.longs.Long2ByteMap;

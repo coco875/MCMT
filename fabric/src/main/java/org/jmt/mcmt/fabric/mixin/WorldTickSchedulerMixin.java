@@ -6,8 +6,8 @@ import net.minecraft.world.tick.OrderedTick;
 import net.minecraft.world.tick.QueryableTickScheduler;
 import net.minecraft.world.tick.WorldTickScheduler;
 
-import org.jmt.mcmt.fabric.parallelised.ConcurrentCollections;
-import org.jmt.mcmt.fabric.parallelised.fastutil.Long2ObjectOpenConcurrentHashMap;
+import org.jmt.mcmt.parallelised.ConcurrentCollections;
+import org.jmt.mcmt.parallelised.fastutil.Long2ObjectOpenConcurrentHashMap;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
