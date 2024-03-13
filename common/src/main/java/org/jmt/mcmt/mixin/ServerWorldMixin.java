@@ -1,4 +1,4 @@
-package org.jmt.mcmt.fabric.mixin;
+package org.jmt.mcmt.mixin;
 
 import com.mojang.datafixers.DataFixer;
 import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;

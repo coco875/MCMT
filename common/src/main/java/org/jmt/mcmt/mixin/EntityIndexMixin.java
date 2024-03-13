@@ -1,4 +1,4 @@
-package org.jmt.mcmt.fabric.mixin;
+package org.jmt.mcmt.mixin;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.world.entity.EntityIndex;

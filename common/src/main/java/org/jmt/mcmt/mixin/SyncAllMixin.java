@@ -1,4 +1,4 @@
-package org.jmt.mcmt.fabric.mixin;
+package org.jmt.mcmt.mixin;
 
 import net.minecraft.entity.ai.pathing.EntityNavigation;
 import net.minecraft.entity.ai.pathing.PathMinHeap;

@@ -1,4 +1,4 @@
-package org.jmt.mcmt.fabric.mixin;
+package org.jmt.mcmt.mixin;
 
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.World;

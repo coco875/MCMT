@@ -1,4 +1,4 @@
-package org.jmt.mcmt.fabric.mixin;
+package org.jmt.mcmt.mixin;
 
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import net.minecraft.world.tick.ChunkTickScheduler;

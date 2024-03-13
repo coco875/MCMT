@@ -1,4 +1,4 @@
-package org.jmt.mcmt.fabric.mixin;
+package org.jmt.mcmt.mixin;
 
 import it.unimi.dsi.fastutil.shorts.ShortSet;
 import net.minecraft.server.world.ChunkHolder;

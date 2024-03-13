@@ -1,4 +1,4 @@
-package org.jmt.mcmt.fabric.mixin;
+package org.jmt.mcmt.mixin;
 
 import it.unimi.dsi.fastutil.longs.LongSortedSet;
 import net.minecraft.world.entity.EntityLike;

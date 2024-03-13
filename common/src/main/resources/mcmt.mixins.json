@@ -1,7 +1,7 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "org.jmt.mcmt.fabric.mixin",
+  "package": "org.jmt.mcmt.mixin",
   "compatibilityLevel": "JAVA_16",
   "mixins": [
     "ChainRestrictedNeighborUpdaterMixin",
@@ -35,5 +35,5 @@
   "injectors": {
     "defaultRequire": 1
   },
-  "plugin": "org.jmt.mcmt.fabric.mixin.SynchronisePlugin"
+  "plugin": "org.jmt.mcmt.mixin.SynchronisePlugin"
 }
