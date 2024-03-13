@@ -22,7 +22,7 @@
       "org.jmt.mcmt.fabric.MCMTFabric"
     ]
   },
-  "accessWidener": "mcmtfabric.accesswidener",
+  "accessWidener": "mcmt.accesswidener",
   "mixins": [
     "mcmt.mixins.json"
   ],

@@ -6,7 +6,6 @@ import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.loading.FMLPaths;
 
 import org.jmt.mcmt.MCMT;
 import org.jmt.mcmt.commands.ConfigCommand;
@@ -19,7 +18,6 @@ public class MCMTForge {
 
     public MCMTForge() {
         MCMT.init();
-        MCMT.CONFIGDIR = FMLPaths.CONFIGDIR.get();
         // Submit our event bus to let architectury register our content on the right time
         MinecraftForge.EVENT_BUS.register(this);
     }

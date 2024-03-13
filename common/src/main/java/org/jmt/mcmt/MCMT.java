@@ -11,13 +11,10 @@ import org.jmt.mcmt.config.GeneralConfig;
 import org.jmt.mcmt.jmx.JMXRegistration;
 import org.jmt.mcmt.serdes.SerDesRegistry;
 
-import java.nio.file.Path;
-
 public class MCMT {
     public static final String MOD_ID = "mcmt";
     public static final Logger LOGGER = LogManager.getLogger();
     public static GeneralConfig config;
-    public static Path CONFIGDIR;
     
     public static void init() {        
         // This code runs as soon as Minecraft is in a mod-load-ready state.

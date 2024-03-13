@@ -35,7 +35,8 @@ public abstract class MinecraftServerMixin extends ReentrantThreadExecutor<Serve
         super(string);
     }
 
-    @Inject(method = "tickWorlds", at = @At(value = "INVOKE", target = "Ljava/lang/Iterable;iterator()Ljava/util/Iterator;"))
+    // @Inject(method = "tickWorlds", at = @At(value = "INVOKE", target = "Ljava/lang/Iterable;iterator()Ljava/util/Iterator;"))
+    @Inject(method = "tickWorlds", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/profiler/Profiler;push(Ljava/lang/String;)V"))
     private void preTick(BooleanSupplier shouldKeepTicking, CallbackInfo ci) {
         ParallelProcessor.preTick(this.worlds.size(), (MinecraftServer) (Object) this);
     }

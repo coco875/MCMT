@@ -10,6 +10,7 @@ import com.google.common.collect.Lists;
 import javax.annotation.Nullable;
 
 import org.jmt.mcmt.MCMT;
+import org.jmt.mcmt.MCMTExpectPlatform;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -170,7 +171,7 @@ public class SerDesConfig {
     public static void loadConfigs() {
         filters = new HashMap<>();
         pools = new HashMap<>();
-        java.nio.file.Path cfgDir = MCMT.CONFIGDIR;
+        java.nio.file.Path cfgDir = MCMTExpectPlatform.getConfigDirectory();
         java.nio.file.Path serdesDir = cfgDir.resolve("mcmt-serdes");
         if (Files.isDirectory(serdesDir)) {
 
@@ -230,7 +231,7 @@ public class SerDesConfig {
     }
 
     public static void createFilterConfig(String name, Integer priority, List<String> whitelist, List<String> blacklist, @Nullable String pool) {
-        java.nio.file.Path saveTo = MCMT.CONFIGDIR.resolve("mcmt-serdes").resolve(name + ".toml");
+        java.nio.file.Path saveTo = MCMTExpectPlatform.getConfigDirectory().resolve("mcmt-serdes").resolve(name + ".toml");
         FilterConfig fc = new FilterConfig(priority, name, whitelist, blacklist, pool == null ? "LEGACY" : pool, Config.inMemory());
         FileConfig config = FileConfig.builder(saveTo).build();
         config.set("filters", Lists.newArrayList(OBJECT_CONVERTER.toConfig(fc, Config::inMemoryUniversal)));
