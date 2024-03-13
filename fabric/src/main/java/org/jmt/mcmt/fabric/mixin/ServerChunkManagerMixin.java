@@ -11,8 +11,8 @@ import net.minecraft.world.chunk.ChunkManager;
 import net.minecraft.world.chunk.ChunkStatus;
 import net.minecraft.world.chunk.WorldChunk;
 
+import org.jmt.mcmt.DebugHookTerminator;
 import org.jmt.mcmt.ParallelProcessor;
-import org.jmt.mcmt.fabric.DebugHookTerminator;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;

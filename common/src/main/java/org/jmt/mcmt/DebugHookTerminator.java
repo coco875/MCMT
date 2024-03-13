@@ -1,4 +1,4 @@
-package org.jmt.mcmt.fabric;
+package org.jmt.mcmt;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +19,6 @@ import net.minecraft.world.chunk.ProtoChunk;
 import net.minecraft.world.chunk.WorldChunk;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jmt.mcmt.MCMT;
 import org.jmt.mcmt.config.GeneralConfig;
 
 import com.mojang.datafixers.util.Either;

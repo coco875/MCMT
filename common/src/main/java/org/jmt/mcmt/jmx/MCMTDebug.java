@@ -1,14 +1,25 @@
-package org.jmt.mcmt.fabric.jmx;
+package org.jmt.mcmt.jmx;
+
+/*
+fabric
 
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
+*/
+
+/*
+forge
+import net.minecraftforge.fml.ModList;
+*/
+
 import net.minecraft.util.math.ChunkPos;
 
 import javax.management.AttributeChangeNotification;
 import javax.management.MBeanNotificationInfo;
 import javax.management.NotificationBroadcasterSupport;
 
-import org.jmt.mcmt.fabric.DebugHookTerminator;
+import org.jmt.mcmt.DebugHookTerminator;
+import org.jmt.mcmt.jmx.MCMTDebugMBean;
 
 /**
  * MBean for debugging modlaunching issues
@@ -26,9 +37,26 @@ public class MCMTDebug extends NotificationBroadcasterSupport implements MCMTDeb
 
     @Override
     public String[] getLoadedMods() {
+        throw new AssertionError();
+    }
+
+    /*
+    fabric
+    @Override
+    public String[] getLoadedMods() {
         Thread.currentThread().setContextClassLoader(ccl);
         return FabricLoader.getInstance().getAllMods().stream().map(ModContainer::getMetadata).map(info -> info.getId() + ":" + info.getVersion().toString()).toArray(String[]::new);
     }
+    */
+
+    /*
+    forge
+    @Override
+    public String[] getLoadedMods() {
+        Thread.currentThread().setContextClassLoader(ccl);
+        return ModList.get().applyForEachModContainer(mc -> mc.getModId() + ":" + mc.getModInfo().getVersion().toString()).toArray(String[]::new);
+    }
+    */
 
     @Override
     public String getMainChunkLoadStatus() {

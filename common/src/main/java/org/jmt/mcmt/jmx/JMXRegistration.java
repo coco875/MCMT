@@ -1,6 +1,7 @@
-package org.jmt.mcmt.fabric.jmx;
+package org.jmt.mcmt.jmx;
 
 import javax.management.*;
+
 import java.lang.management.ManagementFactory;
 
 public class JMXRegistration {

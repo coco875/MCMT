@@ -9,8 +9,8 @@ import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.util.thread.ReentrantThreadExecutor;
 import net.minecraft.world.World;
 
+import org.jmt.mcmt.DebugHookTerminator;
 import org.jmt.mcmt.ParallelProcessor;
-import org.jmt.mcmt.fabric.DebugHookTerminator;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;

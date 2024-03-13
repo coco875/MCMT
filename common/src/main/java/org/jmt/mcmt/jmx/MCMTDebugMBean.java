@@ -1,4 +1,4 @@
-package org.jmt.mcmt.fabric.jmx;
+package org.jmt.mcmt.jmx;
 
 public interface MCMTDebugMBean {
 
