@@ -96,7 +96,7 @@ public class ParallelProcessor {
         config = MCMT.config; // Load when config are loaded. Static loads before config update.
         if (!config.disabled && !config.disableWorld) {
             if (worldPhaser != null) {
-                LOGGER.warn("Multiple servers?");
+                LOGGER.warn("Multiple servers? (worldPhaser != null, preTick)");
                 return;
             } else {
                 tickStart = System.nanoTime();
@@ -117,7 +117,7 @@ public class ParallelProcessor {
             return;
         }
         if (mcs != server) {
-            LOGGER.warn("Multiple servers?");
+            LOGGER.warn("Multiple servers? (mcs != server callTick)");
             config.disabled = true;
             serverworld.tick(hasTimeLeft);
             return;
@@ -148,7 +148,7 @@ public class ParallelProcessor {
     public static void postTick(MinecraftServer server) {
         if (!config.disabled && !config.disableWorld) {
             if (mcs != server) {
-                LOGGER.warn("Multiple servers?");
+                LOGGER.warn("Multiple servers? (mcs != server, postTick)");
                 return;
             } else {
                 worldPhaser.arriveAndAwaitAdvance();

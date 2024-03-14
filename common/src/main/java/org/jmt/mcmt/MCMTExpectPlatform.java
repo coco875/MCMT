@@ -10,4 +10,9 @@ public class MCMTExpectPlatform {
         // Just throw an error, the content should get replaced at runtime.
         throw new AssertionError();
     }
+
+    @ExpectPlatform
+    public static String[] getLoadedMods() {
+        throw new AssertionError();
+    }
 }

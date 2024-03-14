@@ -9,7 +9,6 @@ import com.google.common.collect.Lists;
 
 import javax.annotation.Nullable;
 
-import org.jmt.mcmt.MCMT;
 import org.jmt.mcmt.MCMTExpectPlatform;
 
 import java.io.IOException;
