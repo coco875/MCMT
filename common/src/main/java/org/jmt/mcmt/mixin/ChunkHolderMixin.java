@@ -25,7 +25,8 @@ public abstract class ChunkHolderMixin {
     @Final
     private ShortSet[] blockUpdatesBySection;
 
-    @Inject(method = "<init>", at = @At(value = "FIELD", target = "Lnet/minecraft/server/world/ChunkHolder;blockUpdatesBySection:[Lit/unimi/dsi/fastutil/shorts/ShortSet;", opcode = Opcodes.PUTFIELD, shift = At.Shift.AFTER))
+    // @Inject(method = "<init>", at = @At(value = "FIELD", target = "Lnet/minecraft/server/world/ChunkHolder;blockUpdatesBySection:[Lit/unimi/dsi/fastutil/shorts/ShortSet;", opcode = Opcodes.PUTFIELD, shift = At.Shift.AFTER))
+    @Inject(method = "<init>", at = @At(value = "TAIL", target = "Lnet/minecraft/server/world/ChunkHolder;blockUpdatesBySection:[Lit/unimi/dsi/fastutil/shorts/ShortSet;"))
     private void overwriteShortSet(ChunkPos pos, int level, HeightLimitView world, LightingProvider lightingProvider, ChunkHolder.LevelUpdateListener levelUpdateListener, ChunkHolder.PlayersWatchingChunkProvider playersWatchingChunkProvider, CallbackInfo ci) {
         this.blockUpdatesBySection = new ConcurrentShortHashSet[world.countVerticalSections()];
     }
