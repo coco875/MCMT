@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "id": "mcmtfabric",
+  "id": "mcmt",
   "version": "${version}",
   "name": "MCMTFabric",
   "description": "A fabric port of MCMT.",
@@ -12,17 +12,17 @@
     "sources": "https://github.com/himekifee/MCMTFabric"
   },
   "license": "GPLv3",
-  "icon": "assets/mcmtfabric/mcmt.png",
+  "icon": "assets/mcmt/mcmt.png",
   "environment": "*",
   "entrypoints": {
     "preLaunch": [
-      "org.jmt.mcmt.fabric.syncfu.SyncFuTransformer"
+      "net.himeki.mcmt.fabric.syncfu.SyncFuTransformer"
     ],
     "main": [
-      "org.jmt.mcmt.fabric.MCMTFabric"
+      "net.himeki.mcmt.fabric.MCMTFabric"
     ]
   },
-  "accessWidener": "mcmt.accesswidener",
+  "accessWidener": "mcmt.fabric.accesswidener",
   "mixins": [
     "mcmt.mixins.json"
   ],

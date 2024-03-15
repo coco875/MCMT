@@ -1,7 +1,7 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "org.jmt.mcmt.mixin",
+  "package": "net.himeki.mcmt.mixin",
   "compatibilityLevel": "JAVA_16",
   "mixins": [
     "ChainRestrictedNeighborUpdaterMixin",
@@ -35,5 +35,5 @@
   "injectors": {
     "defaultRequire": 1
   },
-  "plugin": "org.jmt.mcmt.mixin.SynchronisePlugin"
+  "plugin": "net.himeki.mcmt.mixin.SynchronisePlugin"
 }
