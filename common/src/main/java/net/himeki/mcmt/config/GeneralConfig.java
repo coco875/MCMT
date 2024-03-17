@@ -97,10 +97,10 @@ public class GeneralConfig implements ConfigData {
 
     // More Debug
     @Comment("Enable ops tracing; this will probably have a performance impact, but allows for better debugging")
-    public boolean opsTracing = false;
+    public boolean opsTracing = true;
 
     @Comment("Maximum time between MCMT presence alerts in 10ms steps")
-    public int logCap = 720000;
+    public int logCap = 1500;
 
 
     public enum ParaMaxMode {
@@ -117,7 +117,7 @@ public class GeneralConfig implements ConfigData {
         if (paraMax >= -1)
             if (paraMaxMode == ParaMaxMode.Standard || paraMaxMode == ParaMaxMode.Override || paraMaxMode == ParaMaxMode.Reduction)
                 if (timeoutCount >= 500 && timeoutCount <= 500000)
-                    if (logCap >= 15000)
+                    if (logCap >= 1500)
                         return;
         throw new ValidationException("Failed to validate MCMT config.");
     }

@@ -55,8 +55,12 @@ public class ParallelProcessor {
             fjwt.setContextClassLoader(cl);
             return fjwt;
         };
-        worldPool = new ForkJoinPool(Math.min(3, Math.max(parallelism / 2, 1)), worldThreadFactory, null, true);
-        tickPool = new ForkJoinPool(parallelism, tickThreadFactory, null, true);
+        worldPool = new ForkJoinPool(Math.min(3, Math.max(parallelism / 2, 1)), worldThreadFactory, ParallelProcessor::onThreadException, true); //, 0, 32767, 1, null, 3000, TimeUnit.MILLISECONDS);
+        tickPool = new ForkJoinPool(parallelism, tickThreadFactory, ParallelProcessor::onThreadException, true);//, 0, 32767, 1, null, 3000, TimeUnit.MILLISECONDS);
+    }
+
+    public static void onThreadException(Thread t, Throwable e) {
+    	e.getCause().printStackTrace(System.out);
     }
 
     /**
@@ -67,7 +71,7 @@ public class ParallelProcessor {
         // setupThreadPool(4);
     }
 
-    static Map<String, Set<Thread>> mcThreadTracker = new ConcurrentHashMap<String, Set<Thread>>();
+    public static Map<String, Set<Thread>> mcThreadTracker = new ConcurrentHashMap<String, Set<Thread>>();
 
     // Statistics
     public static AtomicInteger currentWorlds = new AtomicInteger();
@@ -126,6 +130,7 @@ public class ParallelProcessor {
             String taskName = null;
             if (config.opsTracing) {
                 taskName = "WorldTick: " + serverworld.toString() + "@" + serverworld.hashCode();
+                // MCMT.LOGGER.info(taskName);
                 currentTasks.add(taskName);
             }
             String finalTaskName = taskName;
@@ -188,6 +193,7 @@ public class ParallelProcessor {
         String taskName = null;
         if (config.opsTracing) {
             taskName = "EnvTick: " + chunk.toString() + "@" + chunk.hashCode();
+            // MCMT.LOGGER.info(taskName);
             currentTasks.add(taskName);
         }
         String finalTaskName = taskName;
@@ -197,9 +203,9 @@ public class ParallelProcessor {
                 currentEnvs.incrementAndGet();
                 world.tickChunk(chunk, k);
             } finally {
-                if (config.opsTracing) currentTasks.remove(finalTaskName);
                 sharedPhasers.get(world).arriveAndDeregister();
                 currentEnvs.decrementAndGet();
+                if (config.opsTracing) currentTasks.remove(finalTaskName);
             }
         });
     }
@@ -228,6 +234,7 @@ public class ParallelProcessor {
         String taskName = null;
         if (config.opsTracing) {
             taskName = "EntityTick: " + /*entityIn.toString() + KG: Wayyy too slow. Maybe for debug but needs to be done via flag in that circumstance */ "@" + entityIn.hashCode();
+            // MCMT.LOGGER.info(taskName);
             currentTasks.add(taskName);
         }
         String finalTaskName = taskName;
@@ -242,9 +249,9 @@ public class ParallelProcessor {
                     tickConsumer.accept(entityIn);
                 }
             } finally {
-                if (config.opsTracing) currentTasks.remove(finalTaskName);
                 sharedPhasers.get(serverworld).arriveAndDeregister();
                 currentEnts.decrementAndGet();
+                if (config.opsTracing) currentTasks.remove(finalTaskName);
             }
         });
     }
@@ -274,6 +281,7 @@ public class ParallelProcessor {
             String taskName = null;
             if (config.opsTracing) {
                 taskName = "TETick: " + tte.toString() + "@" + tte.hashCode();
+                // MCMT.LOGGER.info(taskName);
                 currentTasks.add(taskName);
             }
             String finalTaskName = taskName;
@@ -288,9 +296,9 @@ public class ParallelProcessor {
                     System.err.println("Exception ticking TE at " + tte.getPos());
                     e.printStackTrace();
                 } finally {
-                    if (config.opsTracing) currentTasks.remove(finalTaskName);
                     sharedPhasers.get(world).arriveAndDeregister();
                     currentTEs.decrementAndGet();
+                    if (config.opsTracing) currentTasks.remove(finalTaskName);
                 }
             });
         } else tte.tick();

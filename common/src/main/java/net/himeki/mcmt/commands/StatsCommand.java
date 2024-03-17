@@ -101,10 +101,10 @@ public class StatsCommand {
         resetThreadStats = true;
     }
 
-    static int warningDelay = 15000;
+    static int warningDelay = 1500;
 
     public static void resetWarnDelay() {
-        warningDelay = 15000;
+        warningDelay = 1500;
     }
 
     public static void runDataThread() {
@@ -186,8 +186,22 @@ public class StatsCommand {
                         warnLog++;
                         if (warnLog % warningDelay == 0) {
                             mtlog.warn("MCMT is installed; error logs are likely invalid for any other mods");
+                            mtlog.warn("Current Task :" + ParallelProcessor.currentTasks.toString());
+                            mtlog.warn("Number Words :" + ParallelProcessor.currentWorlds.get());
+                            mtlog.warn("Number TEs :" + ParallelProcessor.currentTEs.get());
+                            mtlog.warn("Number Entities :" + ParallelProcessor.currentEnts.get());
+                            mtlog.warn("Number Environments :" + ParallelProcessor.currentEnvs.get());
+                            for (Thread t : Thread.getAllStackTraces().keySet()) {
+                                if (!t.getName().contains("MCMT")) {
+                                    continue;
+                                }
+                                mtlog.warn("Thread :" + t.getName());
+                                for (StackTraceElement ste : t.getStackTrace()) {
+                                    mtlog.warn("  " + ste.toString());
+                                }
+                            }
                             warningDelay *= 1.2;
-                            warningDelay = Math.min(warningDelay, Math.max(config.logCap, 15000)); // Max delay ~~ 2 hours
+                            warningDelay = Math.min(warningDelay, Math.max(config.logCap, 1500)); // Max delay ~~ 2 hours
                         }
                     }
                 } catch (Exception e) {
