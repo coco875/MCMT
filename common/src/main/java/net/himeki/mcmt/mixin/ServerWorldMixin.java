@@ -72,7 +72,7 @@ public abstract class ServerWorldMixin implements StructureWorldAccess {
     }
 
     @Redirect(method = "method_31420", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;tickEntity(Ljava/util/function/Consumer;Lnet/minecraft/entity/Entity;)V"))
-    private void overwriteEntityTicking(ServerWorld instance, Consumer consumer, Entity entity) {
+    private void overwriteEntityTicking(ServerWorld instance, Consumer<Entity> consumer, Entity entity) {
         ParallelProcessor.callEntityTick(consumer, entity, thisWorld);
     }
 

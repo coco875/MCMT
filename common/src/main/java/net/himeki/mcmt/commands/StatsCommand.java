@@ -186,20 +186,28 @@ public class StatsCommand {
                         warnLog++;
                         if (warnLog % warningDelay == 0) {
                             mtlog.warn("MCMT is installed; error logs are likely invalid for any other mods");
-                            mtlog.warn("Current Task :" + ParallelProcessor.currentTasks.toString());
-                            mtlog.warn("Number Words :" + ParallelProcessor.currentWorlds.get());
-                            mtlog.warn("Number TEs :" + ParallelProcessor.currentTEs.get());
-                            mtlog.warn("Number Entities :" + ParallelProcessor.currentEnts.get());
-                            mtlog.warn("Number Environments :" + ParallelProcessor.currentEnvs.get());
+                            mtlog.warn("Current Task : " + ParallelProcessor.currentTasks.toString());
+                            mtlog.warn("Number Words : " + ParallelProcessor.currentWorlds.get());
+                            mtlog.warn("Number TEs : " + ParallelProcessor.currentTEs.get());
+                            mtlog.warn("Number Entities : " + ParallelProcessor.currentEnts.get());
+                            mtlog.warn("Number Environments : " + ParallelProcessor.currentEnvs.get());
                             for (Thread t : Thread.getAllStackTraces().keySet()) {
-                                if (!t.getName().contains("MCMT")) {
+                                boolean continue_ = false;
+                                for (StackTraceElement ste : t.getStackTrace()) {
+                                    if (ste.toString().contains("Unsafe.park") || ste.toString().contains("wait") || ste.toString().contains("sleep")) {
+                                        continue_ = true;
+                                        break;
+                                    }
+                                }
+                                if (continue_) {
                                     continue;
                                 }
-                                mtlog.warn("Thread :" + t.getName());
+                                mtlog.warn("Thread : " + t.getName());
                                 for (StackTraceElement ste : t.getStackTrace()) {
                                     mtlog.warn("  " + ste.toString());
                                 }
                             }
+                            mtlog.info("all info above is for debugging");
                             warningDelay *= 1.2;
                             warningDelay = Math.min(warningDelay, Math.max(config.logCap, 1500)); // Max delay ~~ 2 hours
                         }
