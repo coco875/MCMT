@@ -1,17 +1,17 @@
 accessWidener	v1	named
-Accessible field net/minecraft/server/level/ServerChunkCache mainThreadExecutor Lnet/minecraft/server/level/ServerChunkCache$MainThreadExecutor;
-Accessible field net/minecraft/server/level/ChunkMap pointOfInterestStorage Lnet/minecraft/world/poi/PointOfInterestStorage;
-Accessible field net/minecraft/server/level/ChunkMap structureTemplateManager Lnet/minecraft/structure/StructureTemplateManager;
-Accessible field net/minecraft/world/chunk/LevelChunk$WrappedTickingBlockEntity wrapped Lnet/minecraft/world/chunk/TickingBlockEntity;
-Accessible field net/minecraft/world/chunk/LevelChunk$DirectTickingBlockEntity blockEntity Lnet/minecraft/block/entity/BlockEntity;
+Accessible field net/minecraft/server/level/ServerChunkCache mainThreadProcessor Lnet/minecraft/server/level/ServerChunkCache$MainThreadExecutor;
+Accessible field net/minecraft/server/level/ChunkMap poiManager Lnet/minecraft/world/entity/ai/village/poi/PoiManager;
+Accessible field net/minecraft/server/level/ChunkMap structureTemplateManager Lnet/minecraft/world/level/levelgen/structure/templatesystem/StructureTemplateManager;
+Accessible field net/minecraft/world/level/chunk/LevelChunk$RebindableTickingBlockEntityWrapper ticker Lnet/minecraft/world/level/block/entity/TickingBlockEntity;
+Accessible field net/minecraft/world/level/chunk/LevelChunk$BoundTickingBlockEntity blockEntity Lnet/minecraft/world/level/block/entity/BlockEntity;
 Accessible method net/minecraft/server/level/ServerLevel processBlockEvent (Lnet/minecraft/server/level/BlockEvent;)Z
-Accessible method net/minecraft/server/level/ServerChunkCache getChunkHolder (J)Lnet/minecraft/server/level/ChunkHolder;
-Accessible method net/minecraft/server/level/ServerChunkCache$MainThreadExecutor runTask ()Z
+Accessible method net/minecraft/server/level/ServerChunkCache getVisibleChunkIfPresent (J)Lnet/minecraft/server/level/ChunkHolder;
+Accessible method net/minecraft/server/level/ServerChunkCache$MainThreadExecutor pollTask ()Z
 Accessible method net/minecraft/world/World tickBlockEntities ()V
 Accessible method net/minecraft/server/level/ChunkMap shouldTick (Lnet/minecraft/util/math/ChunkPos;)Z
-Accessible class net/minecraft/server/level/ChunkMap$EntityTracker
+Accessible class net/minecraft/server/level/ChunkMap$TrackedEntity
 Accessible class net/minecraft/server/level/ServerChunkCache$ChunkWithHolder
 Accessible class net/minecraft/server/level/ServerChunkCache$MainThreadExecutor
-Accessible class net/minecraft/world/chunk/LevelChunk$WrappedTickingBlockEntity
-Accessible class net/minecraft/world/chunk/LevelChunk$DirectTickingBlockEntity
-Accessible class net/minecraft/world/block/CollectingNeighborUpdater$Entry
+Accessible class net/minecraft/world/level/chunk/LevelChunk$RebindableTickingBlockEntityWrapper
+Accessible class net/minecraft/world/level/chunk/LevelChunk$BoundTickingBlockEntity
+Accessible class net/minecraft/world/level/redstone/CollectingNeighborUpdater$NeighborUpdates
