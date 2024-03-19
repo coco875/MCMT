@@ -3,11 +3,11 @@ package net.himeki.mcmt.mixin;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.ServerTask;
 import net.minecraft.commands.CommandOutput;
-import net.minecraft.server.level.ServerChunkManager;
+import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.util.thread.ReentrantThreadExecutor;
-import net.minecraft.world.World;
+import net.minecraft.world.level.Level;
 
 import net.himeki.mcmt.DebugHookTerminator;
 import net.himeki.mcmt.ParallelProcessor;
@@ -46,7 +46,7 @@ public abstract class MinecraftServerMixin extends ReentrantThreadExecutor<Serve
         ParallelProcessor.postTick((MinecraftServer) (Object) this);
     }
 
-    @Redirect(method = "tickWorlds", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerLevel;tick(Ljava/util/function/BooleanSupplier;)V"))
+    @Redirect(method = "tickWorlds", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;tick(Ljava/util/function/BooleanSupplier;)V"))
     private void overwriteTick(ServerLevel serverWorld, BooleanSupplier shouldKeepTicking) {
         ParallelProcessor.callTick(serverWorld, shouldKeepTicking, (MinecraftServer) (Object) this);
     }
@@ -56,8 +56,8 @@ public abstract class MinecraftServerMixin extends ReentrantThreadExecutor<Serve
         return ParallelProcessor.serverExecutionThreadPatch(minecraftServer);
     }
 
-    @Redirect(method = "prepareStartRegion", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerChunkManager;getTotalChunksLoadedCount()I"))
-    private int initialChunkCountBypass(ServerChunkManager instance) {
+    @Redirect(method = "prepareStartRegion", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerChunkCache;getTotalChunksLoadedCount()I"))
+    private int initialChunkCountBypass(ServerChunkCache instance) {
         if (DebugHookTerminator.isBypassLoadTarget())
             return 441;
         int loaded = this.getOverworld().getChunkManager().getLoadedChunkCount();

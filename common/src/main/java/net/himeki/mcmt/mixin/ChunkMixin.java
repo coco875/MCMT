@@ -2,7 +2,7 @@ package net.himeki.mcmt.mixin;
 
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.level.chunk.ChunkAccess;
 
 import net.himeki.mcmt.parallelised.ConcurrentCollections;
 import org.spongepowered.asm.mixin.Final;

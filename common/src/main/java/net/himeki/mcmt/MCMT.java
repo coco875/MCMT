@@ -3,7 +3,7 @@ package net.himeki.mcmt;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigHolder;
 import me.shedaniel.autoconfig.serializer.Toml4jConfigSerializer;
-import net.minecraft.util.ActionResult;
+import net.minecraft.world.InteractionResult;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import net.himeki.mcmt.commands.StatsCommand;
@@ -24,7 +24,7 @@ public class MCMT {
         ConfigHolder<GeneralConfig> holder = AutoConfig.register(GeneralConfig.class, Toml4jConfigSerializer::new);
         holder.registerLoadListener((manager, data) -> {
             holder.getConfig().loadTELists();
-            return ActionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         });
         holder.load();  // Load again to run loadTELists() handler
         config = holder.getConfig();

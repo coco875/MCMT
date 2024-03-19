@@ -12,11 +12,11 @@ import java.util.function.BooleanSupplier;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ChunkHolder;
-import net.minecraft.server.level.ServerChunkManager;
+import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.ChunkSerializer;
-import net.minecraft.world.chunk.ProtoChunk;
-import net.minecraft.world.chunk.WorldChunk;
+import net.minecraft.world.level.chunk.storage.ChunkSerializer;
+import net.minecraft.world.level.chunk.ProtoChunk;
+import net.minecraft.world.level.chunk.LevelChunk;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import net.himeki.mcmt.config.GeneralConfig;
@@ -30,8 +30,8 @@ import net.minecraft.world.biome.provider.SingleBiomeProviderSettings;
 // TODO Should be renamed ChunkRepairHookTerminator (Note requres coremod edit)
 
 import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.chunk.ChunkStatus;
+import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraft.world.level.chunk.ChunkStatus;
 
 
 /**
@@ -73,7 +73,7 @@ public class DebugHookTerminator {
     public static AtomicLong mainThreadChunkLoadCount = new AtomicLong();
     public static String mainThread = "Server thread";
 
-    public static void chunkLoadDrive(ServerChunkManager.MainThreadExecutor executor, BooleanSupplier isDone, ServerChunkManager scp, CompletableFuture<Either<Chunk, ChunkHolder.Unloaded>> completableFuture, long chunkpos) {
+    public static void chunkLoadDrive(ServerChunkCache.MainThreadExecutor executor, BooleanSupplier isDone, ServerChunkCache scp, CompletableFuture<Either<ChunkAccess, ChunkHolder.ChunkLoadingFailure>> completableFuture, long chunkpos) {
 		/*
 		if (!GeneralConfig.enableChunkTimeout) {
 			bypassLoadTarget = false;
@@ -88,7 +88,7 @@ public class DebugHookTerminator {
             mainThreadChunkLoad.set(true);
         }
         while (!isDone.getAsBoolean()) {
-            if (!executor.runTask()) {
+            if (!executor.pollTask()) {
                 if (isDone.getAsBoolean()) {
                     if (Thread.currentThread().getName().equals(mainThread)) {
                         mainThreadChunkLoad.set(false);
@@ -111,7 +111,7 @@ public class DebugHookTerminator {
                         if (config.enableBlankReturn) {
                             /* 1.16.1 code; AKA the only thing that changed  */
                             // Generate a new empty chunk
-                            Chunk out = new WorldChunk(scp.getLevel(), new ChunkPos(chunkpos));
+                        ChunkAccess out = new LevelChunk(scp.getLevel(), new ChunkPos(chunkpos));
                             // SCIENCE
                             completableFuture.complete(Either.left(out));
                             /* */
@@ -128,10 +128,10 @@ public class DebugHookTerminator {
 							/* */
                         } else {
                             try {
-                                CompoundTag cnbt = scp.threadedAnvilChunkStorage.getNbt(new ChunkPos(chunkpos)).get().get();
+                                CompoundTag cnbt = scp.chunkMap.read(new ChunkPos(chunkpos)).get().get();
                                 if (cnbt != null) {
-                                    ProtoChunk cp = ChunkSerializer.deserialize((ServerLevel) scp.getLevel(), scp.threadedAnvilChunkStorage.pointOfInterestStorage, new ChunkPos(chunkpos), cnbt);
-                                    completableFuture.complete(Either.left(new WorldChunk((ServerLevel) scp.getLevel(), cp, null)));
+                                    ProtoChunk cp = ChunkSerializer.read((ServerLevel) scp.getLevel(), scp.chunkMap.poiManager, new ChunkPos(chunkpos), cnbt);
+                                    completableFuture.complete(Either.left(new LevelChunk((ServerLevel) scp.getLevel(), cp, null)));
                                 }
                             } catch (InterruptedException | ExecutionException e) {
                                 e.printStackTrace();
@@ -140,10 +140,10 @@ public class DebugHookTerminator {
                         }
                     } else {
                         System.err.println(completableFuture.toString());
-                        ChunkHolder chunkholder = scp.getChunkHolder(chunkpos);
+                        ChunkHolder chunkholder = scp.getVisibleChunkIfPresent(chunkpos);
                         CompletableFuture<?> firstBroke = null;
-                        for (ChunkStatus cs : ChunkStatus.createOrderedList()) {
-                            CompletableFuture<Either<Chunk, ChunkHolder.Unloaded>> cf = chunkholder.getFutureFor(cs);
+                        for (ChunkStatus cs : ChunkStatus.getStatusList()) {
+                            CompletableFuture<Either<ChunkAccess, ChunkHolder.ChunkLoadingFailure>> cf = chunkholder.getFutureIfPresentUnchecked(cs);
                             if (cf == ChunkHolder.UNLOADED_CHUNK_FUTURE) {
                                 System.out.println("Status: " + cs.toString() + " is not yet loaded");
                             } else {
@@ -154,7 +154,7 @@ public class DebugHookTerminator {
                             }
                         }
                         breaks.add(new BrokenChunkLocator(chunkpos, completableFuture, firstBroke));
-                        completableFuture.complete(Either.right(new ChunkHolder.Unloaded() {
+                        completableFuture.complete(Either.right(new ChunkHolder.ChunkLoadingFailure() {
                             @Override
                             public String toString() {
                                 return "TIMEOUT";

@@ -1,7 +1,7 @@
 package net.himeki.mcmt.serdes.filter;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.level.Level;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -95,7 +95,7 @@ public class GenericConfigFilter implements ISerDesFilter {
     }
 
     @Override
-    public void serialise(Runnable task, Object obj, BlockPos bp, World w, ISerDesHookType hookType) {
+    public void serialise(Runnable task, Object obj, BlockPos bp, Level w, ISerDesHookType hookType) {
         primePool.serialise(task, hookType, bp, w, primeOpts);
     }
 

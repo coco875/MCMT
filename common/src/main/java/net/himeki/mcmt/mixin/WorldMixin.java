@@ -1,11 +1,11 @@
 package net.himeki.mcmt.mixin;
 
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldAccess;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccess;
 import net.minecraft.world.level.block.entity.TickingBlockEntity;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.chunk.ReadOnlyChunk;
+import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraft.world.level.chunk.ReadOnlyChunk;
 
 import net.himeki.mcmt.MCMT;
 import net.himeki.mcmt.ParallelProcessor;
@@ -52,8 +52,8 @@ public abstract class WorldMixin implements WorldAccess, AutoCloseable {
         return this.thread;
     }
 
-    @Redirect(method = "getChunk(II)Lnet/minecraft/world/chunk/WorldChunk;", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;getChunk(IILnet/minecraft/world/chunk/ChunkStatus;)Lnet/minecraft/world/chunk/Chunk;"))
-    private Chunk getChunk(World world, int x, int z, net.minecraft.world.chunk.ChunkStatus leastStatus, int i, int j) {
+    @Redirect(method = "getChunk(II)Lnet/minecraft/world/chunk/LevelChunk;", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;getChunk(IILnet/minecraft/world/chunk/ChunkStatus;)Lnet/minecraft/world/chunk/Chunk;"))
+    private Chunk getChunk(World world, int x, int z, net.minecraft.world.level.chunk.ChunkStatus leastStatus, int i, int j) {
         Chunk chunk;
         long startTime, counter = -1;
         startTime = System.currentTimeMillis();

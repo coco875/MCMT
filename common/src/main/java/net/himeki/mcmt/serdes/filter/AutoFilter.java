@@ -1,7 +1,7 @@
 package net.himeki.mcmt.serdes.filter;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.level.Level;
 
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -33,7 +33,7 @@ public class AutoFilter implements ISerDesFilter {
     }
 
     @Override
-    public void serialise(Runnable task, Object obj, BlockPos bp, World w, ISerDesHookType hookType) {
+    public void serialise(Runnable task, Object obj, BlockPos bp, Level w, ISerDesHookType hookType) {
         pool.serialise(task, obj, bp, w, null);
     }
 

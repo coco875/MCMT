@@ -2,18 +2,18 @@ package net.himeki.mcmt.parallelised;
 
 import com.mojang.datafixers.DataFixer;
 
-import net.minecraft.server.WorldGenerationProgressListener;
-import net.minecraft.server.level.ServerChunkManager;
+import net.minecraft.server.level.progress.ChunkProgressListener;
+import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.structure.StructureTemplateManager;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
 import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.PersistentStateManager;
-import net.minecraft.world.World;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.chunk.ChunkStatus;
-import net.minecraft.world.chunk.ChunkStatusChangeListener;
-import net.minecraft.world.gen.chunk.ChunkGenerator;
-import net.minecraft.world.level.storage.LevelStorage;
+import net.minecraft.world.level.storage.DimensionDataStorage;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraft.world.level.chunk.ChunkStatus;
+import net.minecraft.world.level.entity.ChunkStatusUpdateListener;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.storage.LevelStorageSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.Marker;
@@ -38,7 +38,7 @@ import java.util.function.Supplier;
 import java.io.File;
 /* */
 
-public class ParaServerChunkProvider extends ServerChunkManager {
+public class ParaServerChunkProvider extends ServerChunkCache {
 
     protected ConcurrentHashMap<ChunkCacheAddress, ChunkCacheLine> chunkCache = new ConcurrentHashMap<ChunkCacheAddress, ChunkCacheLine>();
     protected AtomicInteger access = new AtomicInteger(Integer.MIN_VALUE);
@@ -53,21 +53,21 @@ public class ParaServerChunkProvider extends ServerChunkManager {
     protected ChunkLock loadingChunkLock = new ChunkLock();
     Logger log = LogManager.getLogger();
     Marker chunkCleaner = MarkerManager.getMarker("ChunkCleaner");
-    private final World world;
+    private final Level world;
 
     /* 1.16.1 code; AKA the only thing that changed  */
-    public ParaServerChunkProvider(ServerLevel world, LevelStorage.Session session, DataFixer dataFixer, StructureTemplateManager structureManager, Executor workerExecutor, ChunkGenerator chunkGenerator, int viewDistance, int simulationDistance, boolean dsync, WorldGenerationProgressListener worldGenerationProgressListener, ChunkStatusChangeListener chunkStatusChangeListener, Supplier<PersistentStateManager> persistentStateManagerFactory) {
+    public ParaServerChunkProvider(ServerLevel world, LevelStorageSource.LevelStorageAccess session, DataFixer dataFixer, StructureTemplateManager structureManager, Executor workerExecutor, ChunkGenerator chunkGenerator, int viewDistance, int simulationDistance, boolean dsync, ChunkProgressListener worldGenerationProgressListener, ChunkStatusUpdateListener chunkStatusChangeListener, Supplier<DimensionDataStorage> persistentStateManagerFactory) {
         super(world, session, dataFixer, structureManager, workerExecutor, chunkGenerator, viewDistance, simulationDistance, dsync, worldGenerationProgressListener, chunkStatusChangeListener, persistentStateManagerFactory);
         this.world = world;
-        cacheThread = new Thread(this::chunkCacheCleanup, "Chunk Cache Cleaner " + world.getRegistryKey().getValue().getPath());
+        cacheThread = new Thread(this::chunkCacheCleanup, "Chunk Cache Cleaner " + world.dimension().location().getPath());
         cacheThread.start();
     }
 
     @SuppressWarnings("unused")
-    private Chunk getChunkyThing(long chunkPos, ChunkStatus requiredStatus, boolean load) {
-        Chunk cl;
+    private ChunkAccess getChunkyThing(long chunkPos, ChunkStatus requiredStatus, boolean load) {
+        ChunkAccess cl;
         synchronized (this) {
-            cl = super.getChunk(ChunkPos.getPackedX(chunkPos), ChunkPos.getPackedZ(chunkPos), requiredStatus, load);
+            cl = super.getChunk(ChunkPos.getX(chunkPos), ChunkPos.getZ(chunkPos), requiredStatus, load);
         }
         return cl;
     }
@@ -87,32 +87,32 @@ public class ParaServerChunkProvider extends ServerChunkManager {
 
     @Override
     @Nullable
-    public Chunk getChunk(int chunkX, int chunkZ, ChunkStatus requiredStatus, boolean load) {
+    public ChunkAccess getChunk(int chunkX, int chunkZ, ChunkStatus requiredStatus, boolean load) {
 
         if (MCMT.config.disabled || MCMT.config.disableChunkProvider) {
             if (ParallelProcessor.isThreadPooled("Main", Thread.currentThread())) {
                 return CompletableFuture.supplyAsync(() -> {
                     return this.getChunk(chunkX, chunkZ, requiredStatus, load);
-                }, this.mainThreadExecutor).join();
+                }, this.mainThreadProcessor).join();
             }
             return super.getChunk(chunkX, chunkZ, requiredStatus, load);
         }
         if (ParallelProcessor.isThreadPooled("Main", Thread.currentThread())) {
             return CompletableFuture.supplyAsync(() -> {
                 return this.getChunk(chunkX, chunkZ, requiredStatus, load);
-            }, this.mainThreadExecutor).join();
+            }, this.mainThreadProcessor).join();
         }
 
-        long i = ChunkPos.toLong(chunkX, chunkZ);
+        long i = ChunkPos.asLong(chunkX, chunkZ);
 
-        Chunk c = lookupChunk(i, requiredStatus, false);
+        ChunkAccess c = lookupChunk(i, requiredStatus, false);
         if (c != null) {
             return c;
         }
 
         //log.debug("Missed chunk " + i + " on status "  + requiredStatus.toString());
 
-        Chunk cl;
+        ChunkAccess cl;
         if (ParallelProcessor.shouldThreadChunks()) {
             // Multithreaded but still limit to 1 load op per chunk
             long[] locks = loadingChunkLock.lock(i, 0);
@@ -136,7 +136,7 @@ public class ParaServerChunkProvider extends ServerChunkManager {
         return cl;
     }
 
-    public Chunk lookupChunk(long chunkPos, ChunkStatus status, boolean compute) {
+    public ChunkAccess lookupChunk(long chunkPos, ChunkStatus status, boolean compute) {
         int oldAccess = access.getAndIncrement();
         if (access.get() < oldAccess) { // overflow
             clearCache();
@@ -152,7 +152,7 @@ public class ParaServerChunkProvider extends ServerChunkManager {
 
     }
 
-    public void cacheChunk(long chunkPos, Chunk chunk, ChunkStatus status) {
+    public void cacheChunk(long chunkPos, ChunkAccess chunk, ChunkStatus status) {
         long oldAccess = access.getAndIncrement();
         if (access.get() < oldAccess) { // overflow
             clearCache();
@@ -229,19 +229,19 @@ public class ParaServerChunkProvider extends ServerChunkManager {
     }
 
     protected class ChunkCacheLine {
-        WeakReference<Chunk> chunk;
+        WeakReference<ChunkAccess> chunk;
         int lastAccess;
 
-        public ChunkCacheLine(Chunk chunk) {
+        public ChunkCacheLine(ChunkAccess chunk) {
             this(chunk, access.get());
         }
 
-        public ChunkCacheLine(Chunk chunk, int lastAccess) {
+        public ChunkCacheLine(ChunkAccess chunk, int lastAccess) {
             this.chunk = new WeakReference<>(chunk);
             this.lastAccess = lastAccess;
         }
 
-        public Chunk getChunk() {
+        public ChunkAccess getChunk() {
             return chunk.get();
         }
 
@@ -253,7 +253,7 @@ public class ParaServerChunkProvider extends ServerChunkManager {
             lastAccess = access.get();
         }
 
-        public void updateChunkRef(Chunk c) {
+        public void updateChunkRef(ChunkAccess c) {
             if (chunk.get() == null) {
                 chunk = new WeakReference<>(c);
             }

@@ -2,7 +2,7 @@ package net.himeki.mcmt.mixin;
 
 import it.unimi.dsi.fastutil.longs.Long2ByteMap;
 import it.unimi.dsi.fastutil.longs.LongLinkedOpenHashSet;
-import net.minecraft.world.chunk.light.LevelPropagator;
+import net.minecraft.world.level.chunk.light.LevelPropagator;
 
 import net.himeki.mcmt.parallelised.fastutil.ConcurrentLongLinkedOpenHashSet;
 import net.himeki.mcmt.parallelised.fastutil.Long2ByteConcurrentHashMap;

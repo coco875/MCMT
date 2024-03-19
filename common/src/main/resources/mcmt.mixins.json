@@ -18,7 +18,7 @@
     "PathNodeNavigatorMixin",
     "SectionedEntityCacheMixin",
     "SerializingRegionBasedStorageMixin",
-    "ServerChunkManagerMixin",
+    "ServerChunkCacheMixin",
     "ServerLevelMixin",
     "SimulationDistanceLevelPropagatorMixin",
     "SyncAllMixin",

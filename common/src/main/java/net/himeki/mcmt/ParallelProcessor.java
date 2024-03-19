@@ -1,14 +1,14 @@
 package net.himeki.mcmt;
 
-import net.minecraft.world.level.block.entity.PistonBlockEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.FallingBlockEntity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.level.block.piston.PistonMovingBlockEntity;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.item.FallingBlockEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.World;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.TickingBlockEntity;
-import net.minecraft.world.chunk.WorldChunk;
+import net.minecraft.world.level.chunk.LevelChunk;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import net.himeki.mcmt.config.BlockEntityLists;
@@ -185,7 +185,7 @@ public class ParallelProcessor {
         sharedPhasers.put(world, phaser);
     }
 
-    public static void callTickChunks(ServerLevel world, WorldChunk chunk, int k) {
+    public static void callTickChunks(ServerLevel world, LevelChunk chunk, int k) {
         if (config.disabled || config.disableEnvironment) {
             world.tickChunk(chunk, k);
             return;
@@ -227,7 +227,7 @@ public class ParallelProcessor {
             tickConsumer.accept(entityIn);
             return;
         }
-        if (entityIn instanceof PlayerEntity || entityIn instanceof FallingBlockEntity) {
+        if (entityIn instanceof Player || entityIn instanceof FallingBlockEntity) {
             tickConsumer.accept(entityIn);
             return;
         }
@@ -244,7 +244,7 @@ public class ParallelProcessor {
                 final ISerDesFilter filter = SerDesRegistry.getFilter(SerDesHookTypes.EntityTick, entityIn.getClass());
                 currentEnts.incrementAndGet();
                 if (filter != null) {
-                    filter.serialise(() -> tickConsumer.accept(entityIn), entityIn, entityIn.getBlockPos(), serverworld, SerDesHookTypes.EntityTick);
+                    filter.serialise(() -> tickConsumer.accept(entityIn), entityIn, entityIn.blockPosition(), serverworld, SerDesHookTypes.EntityTick);
                 } else {
                     tickConsumer.accept(entityIn);
                 }
@@ -268,13 +268,13 @@ public class ParallelProcessor {
         if (!config.disabled && !config.disableTileEntity) sharedPhasers.get(world).register();
     }
 
-    public static void callBlockEntityTick(TickingBlockEntity tte, World world) {
-        if ((world instanceof ServerLevel) && tte instanceof WorldChunk.WrappedTickingBlockEntity && (((WorldChunk.WrappedTickingBlockEntity) tte).wrapped instanceof WorldChunk.DirectTickingBlockEntity<?>)) {
+    public static void callBlockEntityTick(TickingBlockEntity tte, Level world) {
+        if ((world instanceof ServerLevel) && tte instanceof LevelChunk.RebindableTickingBlockEntityWrapper && (((LevelChunk.RebindableTickingBlockEntityWrapper) tte).ticker instanceof LevelChunk.BoundTickingBlockEntity<?>)) {
             if (config.disabled || config.disableTileEntity) {
                 tte.tick();
                 return;
             }
-            if (((WorldChunk.DirectTickingBlockEntity<?>) ((WorldChunk.WrappedTickingBlockEntity) tte).wrapped).blockEntity instanceof PistonBlockEntity) {
+            if (((LevelChunk.BoundTickingBlockEntity<?>) ((LevelChunk.RebindableTickingBlockEntityWrapper) tte).ticker).blockEntity instanceof PistonMovingBlockEntity) {
                 tte.tick();
                 return;
             }
@@ -288,7 +288,7 @@ public class ParallelProcessor {
             sharedPhasers.get(world).register();
             tickPool.execute(() -> {
                 try {
-                    final ISerDesFilter filter = SerDesRegistry.getFilter(SerDesHookTypes.TETick, ((WorldChunk.WrappedTickingBlockEntity) tte).wrapped.getClass());
+                    final ISerDesFilter filter = SerDesRegistry.getFilter(SerDesHookTypes.TETick, ((LevelChunk.RebindableTickingBlockEntityWrapper) tte).ticker.getClass());
                     currentTEs.incrementAndGet();
                     if (filter != null) filter.serialise(tte::tick, tte, tte.getPos(), world, SerDesHookTypes.TETick);
                     else tte.tick();
@@ -316,7 +316,7 @@ public class ParallelProcessor {
         if (isLocking && BlockEntityLists.teWhiteList.contains(tte.getClass())) {
             isLocking = false;
         }
-        if (tte instanceof PistonBlockEntity) {
+        if (tte instanceof PistonMovingBlockEntity) {
             isLocking = true;
         }
         return isLocking;

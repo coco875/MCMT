@@ -8,11 +8,11 @@ import javax.annotation.Nullable;
 import net.himeki.mcmt.serdes.ISerDesHookType;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.level.Level;
 
 public interface ISerDesFilter {
 
-    public void serialise(Runnable task, Object obj, BlockPos bp, World w, ISerDesHookType hookType);
+    public void serialise(Runnable task, Object obj, BlockPos bp, Level w, ISerDesHookType hookType);
 
     @Nullable
     public default Set<Class<?>> getTargets() {

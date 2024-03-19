@@ -1,7 +1,7 @@
 package net.himeki.mcmt.mixin;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import net.minecraft.entity.Entity;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.EntityList;
 
 import net.himeki.mcmt.parallelised.fastutil.Int2ObjectConcurrentHashMap;

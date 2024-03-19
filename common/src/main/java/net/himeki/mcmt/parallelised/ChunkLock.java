@@ -33,7 +33,7 @@ public class ChunkLock {
         int pos = 0;
         for (int i = -radius; i <= radius; i++) {
             for (int j = -radius; j <= radius; j++) {
-                long curr = cp + ChunkPos.toLong(i, j); // Can error at the boundaries but eh
+                long curr = cp + ChunkPos.asLong(i, j); // Can error at the boundaries but eh
                 targets[pos++] = curr;
             }
         }

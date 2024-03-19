@@ -9,9 +9,9 @@ import java.util.function.Supplier;
 
 import com.google.common.collect.Lists;
 
-import net.minecraft.world.level.block.entity.PistonBlockEntity;
+import net.minecraft.world.level.block.piston.PistonMovingBlockEntity;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.level.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import net.himeki.mcmt.MCMT;
@@ -199,7 +199,7 @@ public class SerDesRegistry {
             if (isLocking && BlockEntityLists.teWhiteList.contains(tte.getClass())) {
                 isLocking = false;
             }
-            if (tte instanceof PistonBlockEntity) {
+            if (tte instanceof PistonMovingBlockEntity) {
                 isLocking = true;
             }
             return isLocking;
@@ -217,7 +217,7 @@ public class SerDesRegistry {
         }
 
         @Override
-        public void serialise(Runnable task, Object obj, BlockPos bp, World w, ISerDesHookType hookType) {
+        public void serialise(Runnable task, Object obj, BlockPos bp, Level w, ISerDesHookType hookType) {
             if (!unknown.contains(obj.getClass())) {
                 ClassMode mode = ClassMode.UNKNOWN;
                 for (ISerDesFilter isdf : filters) {

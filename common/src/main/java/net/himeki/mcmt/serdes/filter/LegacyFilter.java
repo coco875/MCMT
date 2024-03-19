@@ -12,7 +12,7 @@ import net.himeki.mcmt.serdes.pools.ISerDesPool.ISerDesOptions;
 import net.himeki.mcmt.serdes.ISerDesHookType;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.level.Level;
 
 public class LegacyFilter implements ISerDesFilter {
 
@@ -28,7 +28,7 @@ public class LegacyFilter implements ISerDesFilter {
     }
 
     @Override
-    public void serialise(Runnable task, Object obj, BlockPos bp, World w, ISerDesHookType hookType) {
+    public void serialise(Runnable task, Object obj, BlockPos bp, Level w, ISerDesHookType hookType) {
         clp.serialise(task, obj, bp, w, config);
     }
 

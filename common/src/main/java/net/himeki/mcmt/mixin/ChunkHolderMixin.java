@@ -4,7 +4,7 @@ import it.unimi.dsi.fastutil.shorts.ShortSet;
 import net.minecraft.server.level.ChunkHolder;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.HeightLimitView;
-import net.minecraft.world.chunk.light.LightingProvider;
+import net.minecraft.world.level.chunk.light.LightingProvider;
 
 import net.himeki.mcmt.parallelised.fastutil.ConcurrentShortHashSet;
 import org.objectweb.asm.Opcodes;
@@ -25,13 +25,13 @@ public abstract class ChunkHolderMixin {
     @Final
     private ShortSet[] blockUpdatesBySection;
 
-    // @Inject(method = "<init>", at = @At(value = "FIELD", target = "Lnet/minecraft/server/world/ChunkHolder;blockUpdatesBySection:[Lit/unimi/dsi/fastutil/shorts/ShortSet;", opcode = Opcodes.PUTFIELD, shift = At.Shift.AFTER))
-    @Inject(method = "<init>", at = @At(value = "TAIL", target = "Lnet/minecraft/server/world/ChunkHolder;blockUpdatesBySection:[Lit/unimi/dsi/fastutil/shorts/ShortSet;"))
+    // @Inject(method = "<init>", at = @At(value = "FIELD", target = "Lnet/minecraft/server/level/ChunkHolder;blockUpdatesBySection:[Lit/unimi/dsi/fastutil/shorts/ShortSet;", opcode = Opcodes.PUTFIELD, shift = At.Shift.AFTER))
+    @Inject(method = "<init>", at = @At(value = "TAIL", target = "Lnet/minecraft/server/level/ChunkHolder;blockUpdatesBySection:[Lit/unimi/dsi/fastutil/shorts/ShortSet;"))
     private void overwriteShortSet(ChunkPos pos, int level, HeightLimitView world, LightingProvider lightingProvider, ChunkHolder.LevelUpdateListener levelUpdateListener, ChunkHolder.PlayersWatchingChunkProvider playersWatchingChunkProvider, CallbackInfo ci) {
         this.blockUpdatesBySection = new ConcurrentShortHashSet[world.countVerticalSections()];
     }
 
-    @Redirect(method = "markForBlockUpdate", at = @At(value = "FIELD", target = "Lnet/minecraft/server/world/ChunkHolder;blockUpdatesBySection:[Lit/unimi/dsi/fastutil/shorts/ShortSet;", args = "array=set"))
+    @Redirect(method = "markForBlockUpdate", at = @At(value = "FIELD", target = "Lnet/minecraft/server/level/ChunkHolder;blockUpdatesBySection:[Lit/unimi/dsi/fastutil/shorts/ShortSet;", args = "array=set"))
     private void setBlockUpdatesBySection(ShortSet[] array, int index, ShortSet value) {
         array[index] = new ConcurrentShortHashSet();
     }
