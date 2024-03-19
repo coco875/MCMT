@@ -10,10 +10,10 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.LockSupport;
 import java.util.function.BooleanSupplier;
 
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.server.world.ChunkHolder;
-import net.minecraft.server.world.ServerChunkManager;
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ChunkHolder;
+import net.minecraft.server.level.ServerChunkManager;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.ChunkSerializer;
 import net.minecraft.world.chunk.ProtoChunk;
 import net.minecraft.world.chunk.WorldChunk;
@@ -111,7 +111,7 @@ public class DebugHookTerminator {
                         if (config.enableBlankReturn) {
                             /* 1.16.1 code; AKA the only thing that changed  */
                             // Generate a new empty chunk
-                            Chunk out = new WorldChunk(scp.getWorld(), new ChunkPos(chunkpos));
+                            Chunk out = new WorldChunk(scp.getLevel(), new ChunkPos(chunkpos));
                             // SCIENCE
                             completableFuture.complete(Either.left(out));
                             /* */
@@ -128,10 +128,10 @@ public class DebugHookTerminator {
 							/* */
                         } else {
                             try {
-                                NbtCompound cnbt = scp.threadedAnvilChunkStorage.getNbt(new ChunkPos(chunkpos)).get().get();
+                                CompoundTag cnbt = scp.threadedAnvilChunkStorage.getNbt(new ChunkPos(chunkpos)).get().get();
                                 if (cnbt != null) {
-                                    ProtoChunk cp = ChunkSerializer.deserialize((ServerWorld) scp.getWorld(), scp.threadedAnvilChunkStorage.pointOfInterestStorage, new ChunkPos(chunkpos), cnbt);
-                                    completableFuture.complete(Either.left(new WorldChunk((ServerWorld) scp.getWorld(), cp, null)));
+                                    ProtoChunk cp = ChunkSerializer.deserialize((ServerLevel) scp.getLevel(), scp.threadedAnvilChunkStorage.pointOfInterestStorage, new ChunkPos(chunkpos), cnbt);
+                                    completableFuture.complete(Either.left(new WorldChunk((ServerLevel) scp.getLevel(), cp, null)));
                                 }
                             } catch (InterruptedException | ExecutionException e) {
                                 e.printStackTrace();

@@ -2,9 +2,9 @@ package net.himeki.mcmt.mixin;
 
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.ServerTask;
-import net.minecraft.server.command.CommandOutput;
-import net.minecraft.server.world.ServerChunkManager;
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.commands.CommandOutput;
+import net.minecraft.server.level.ServerChunkManager;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.util.thread.ReentrantThreadExecutor;
 import net.minecraft.world.World;
@@ -25,11 +25,11 @@ import java.util.function.BooleanSupplier;
 @Mixin(MinecraftServer.class)
 public abstract class MinecraftServerMixin extends ReentrantThreadExecutor<ServerTask> implements CommandOutput, AutoCloseable {
     @Shadow
-    public abstract ServerWorld getOverworld();
+    public abstract ServerLevel getOverworld();
 
     @Shadow
     @Final
-    private Map<RegistryKey<World>, ServerWorld> worlds;
+    private Map<RegistryKey<World>, ServerLevel> worlds;
 
     public MinecraftServerMixin(String string) {
         super(string);
@@ -46,8 +46,8 @@ public abstract class MinecraftServerMixin extends ReentrantThreadExecutor<Serve
         ParallelProcessor.postTick((MinecraftServer) (Object) this);
     }
 
-    @Redirect(method = "tickWorlds", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;tick(Ljava/util/function/BooleanSupplier;)V"))
-    private void overwriteTick(ServerWorld serverWorld, BooleanSupplier shouldKeepTicking) {
+    @Redirect(method = "tickWorlds", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerLevel;tick(Ljava/util/function/BooleanSupplier;)V"))
+    private void overwriteTick(ServerLevel serverWorld, BooleanSupplier shouldKeepTicking) {
         ParallelProcessor.callTick(serverWorld, shouldKeepTicking, (MinecraftServer) (Object) this);
     }
 

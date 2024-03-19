@@ -19,7 +19,7 @@
     "SectionedEntityCacheMixin",
     "SerializingRegionBasedStorageMixin",
     "ServerChunkManagerMixin",
-    "ServerWorldMixin",
+    "ServerLevelMixin",
     "SimulationDistanceLevelPropagatorMixin",
     "SyncAllMixin",
     "ThreadedAnvilChunkStorageMixin",

@@ -2,9 +2,9 @@ package net.himeki.mcmt.mixin;
 
 import com.mojang.datafixers.util.Either;
 
-import net.minecraft.server.world.ChunkHolder;
-import net.minecraft.server.world.ServerChunkManager;
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.server.level.ChunkHolder;
+import net.minecraft.server.level.ServerChunkManager;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.profiler.Profiler;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkManager;
@@ -36,20 +36,20 @@ public abstract class ServerChunkManagerMixin extends ChunkManager {
 
     @Shadow
     @Final
-    ServerWorld world;
+    ServerLevel world;
 
     @Inject(method = "tickChunks", at = @At(value = "INVOKE", target = "Ljava/util/Collections;shuffle(Ljava/util/List;)V"))
     private void preChunkTick(CallbackInfo ci) {
         ParallelProcessor.preChunkTick(this.world);
     }
 
-    @Redirect(method = "tickChunks", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;tickChunk(Lnet/minecraft/world/chunk/WorldChunk;I)V"))
-    private void overwriteTickChunk(ServerWorld serverWorld, WorldChunk chunk, int randomTickSpeed) {
+    @Redirect(method = "tickChunks", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerLevel;tickChunk(Lnet/minecraft/world/chunk/WorldChunk;I)V"))
+    private void overwriteTickChunk(ServerLevel serverWorld, WorldChunk chunk, int randomTickSpeed) {
         ParallelProcessor.callTickChunks(serverWorld, chunk, randomTickSpeed);
     }
 
 
-    @Redirect(method = {"getChunk(IILnet/minecraft/world/chunk/ChunkStatus;Z)Lnet/minecraft/world/chunk/Chunk;", "getWorldChunk"}, at = @At(value = "FIELD", target = "Lnet/minecraft/server/world/ServerChunkManager;serverThread:Ljava/lang/Thread;", opcode = Opcodes.GETFIELD))
+    @Redirect(method = {"getChunk(IILnet/minecraft/world/chunk/ChunkStatus;Z)Lnet/minecraft/world/chunk/Chunk;", "getLevelChunk"}, at = @At(value = "FIELD", target = "Lnet/minecraft/server/world/ServerChunkManager;serverThread:Ljava/lang/Thread;", opcode = Opcodes.GETFIELD))
     private Thread overwriteServerThread(ServerChunkManager mgr) {
         return Thread.currentThread();
     }

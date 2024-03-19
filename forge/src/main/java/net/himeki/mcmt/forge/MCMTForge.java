@@ -1,6 +1,6 @@
 package net.himeki.mcmt.forge;
 
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.commands.CommandSourceStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
@@ -29,7 +29,7 @@ public class MCMTForge {
     
     @SubscribeEvent
     public void onRegisterCommands(RegisterCommandsEvent event) {
-    	CommandDispatcher<ServerCommandSource> commandDispatcher = event.getDispatcher();
+    	CommandDispatcher<CommandSourceStack> commandDispatcher = event.getDispatcher();
         ConfigCommand.register(commandDispatcher);
     }
 }

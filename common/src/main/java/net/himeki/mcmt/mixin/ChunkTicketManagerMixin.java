@@ -1,8 +1,8 @@
 package net.himeki.mcmt.mixin;
 
 import it.unimi.dsi.fastutil.longs.LongSet;
-import net.minecraft.server.world.ChunkHolder;
-import net.minecraft.server.world.ChunkTicketManager;
+import net.minecraft.server.level.ChunkHolder;
+import net.minecraft.server.level.ChunkTicketManager;
 
 import net.himeki.mcmt.parallelised.ConcurrentCollections;
 import net.himeki.mcmt.parallelised.fastutil.ConcurrentLongLinkedOpenHashSet;

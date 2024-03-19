@@ -5,9 +5,9 @@ import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.server.WorldGenerationProgressListener;
-import net.minecraft.server.world.BlockEvent;
-import net.minecraft.server.world.ServerChunkManager;
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.server.level.BlockEvent;
+import net.minecraft.server.level.ServerChunkManager;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.structure.StructureTemplateManager;
 import net.minecraft.world.*;
 import net.minecraft.world.chunk.ChunkStatusChangeListener;
@@ -36,8 +36,8 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-@Mixin(ServerWorld.class)
-public abstract class ServerWorldMixin implements StructureWorldAccess {
+@Mixin(ServerLevel.class)
+public abstract class ServerLevelMixin implements StructureWorldAccess {
 
     ConcurrentLinkedDeque<BlockEvent> syncedBlockEventCLinkedQueue = new ConcurrentLinkedDeque<BlockEvent>();
 
@@ -54,10 +54,10 @@ public abstract class ServerWorldMixin implements StructureWorldAccess {
     @Shadow
     @Final
     EntityList entityList;
-    ServerWorld thisWorld = (ServerWorld) (Object) this;
+    ServerLevel thisWorld = (ServerLevel) (Object) this;
 
     @Redirect(method = "<init>", at = @At(value = "NEW", target = "net/minecraft/server/world/ServerChunkManager"))
-    private ServerChunkManager overwriteServerChunkManager(ServerWorld world, LevelStorage.Session session, DataFixer dataFixer, StructureTemplateManager structureTemplateManager, Executor workerExecutor, ChunkGenerator chunkGenerator, int viewDistance, int simulationDistance, boolean dsync, WorldGenerationProgressListener worldGenerationProgressListener, ChunkStatusChangeListener chunkStatusChangeListener, Supplier<PersistentStateManager> persistentStateManagerFactory) {
+    private ServerChunkManager overwriteServerChunkManager(ServerLevel world, LevelStorage.Session session, DataFixer dataFixer, StructureTemplateManager structureTemplateManager, Executor workerExecutor, ChunkGenerator chunkGenerator, int viewDistance, int simulationDistance, boolean dsync, WorldGenerationProgressListener worldGenerationProgressListener, ChunkStatusChangeListener chunkStatusChangeListener, Supplier<PersistentStateManager> persistentStateManagerFactory) {
         return new ParaServerChunkProvider(world, session, dataFixer, structureTemplateManager, workerExecutor, chunkGenerator, viewDistance, simulationDistance, dsync, worldGenerationProgressListener, chunkStatusChangeListener, persistentStateManagerFactory);
     }
 
@@ -71,8 +71,8 @@ public abstract class ServerWorldMixin implements StructureWorldAccess {
         ParallelProcessor.preEntityTick(thisWorld);
     }
 
-    @Redirect(method = "method_31420", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;tickEntity(Ljava/util/function/Consumer;Lnet/minecraft/entity/Entity;)V"))
-    private void overwriteEntityTicking(ServerWorld instance, Consumer<Entity> consumer, Entity entity) {
+    @Redirect(method = "method_31420", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerLevel;tickEntity(Ljava/util/function/Consumer;Lnet/minecraft/entity/Entity;)V"))
+    private void overwriteEntityTicking(ServerLevel instance, Consumer<Entity> consumer, Entity entity) {
         ParallelProcessor.callEntityTick(consumer, entity, thisWorld);
     }
 
@@ -101,8 +101,8 @@ public abstract class ServerWorldMixin implements StructureWorldAccess {
         return syncedBlockEventCLinkedQueue.addAll(c);
     }
 
-    @Redirect(method = "updateListeners", at = @At(value = "FIELD", target = "Lnet/minecraft/server/world/ServerWorld;duringListenerUpdate:Z", opcode = Opcodes.PUTFIELD))
-    private void skipSendBlockUpdatedCheck(ServerWorld instance, boolean value) {
+    @Redirect(method = "updateListeners", at = @At(value = "FIELD", target = "Lnet/minecraft/server/world/ServerLevel;duringListenerUpdate:Z", opcode = Opcodes.PUTFIELD))
+    private void skipSendBlockUpdatedCheck(ServerLevel instance, boolean value) {
 
     }
 }

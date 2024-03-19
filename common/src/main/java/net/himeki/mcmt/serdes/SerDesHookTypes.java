@@ -1,6 +1,6 @@
 package net.himeki.mcmt.serdes;
 
-import net.minecraft.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.entity.Entity;
 
 public enum SerDesHookTypes implements ISerDesHookType {

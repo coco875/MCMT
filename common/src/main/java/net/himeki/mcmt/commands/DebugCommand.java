@@ -1,21 +1,21 @@
 package net.himeki.mcmt.commands;
 
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.command.argument.PosArgument;
-import net.minecraft.command.argument.Vec3ArgumentType;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.util.registry.RegistryEntry;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.chunk.BlockEntityTickInvoker;
-import net.minecraft.world.gen.structure.Structure;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.commands.arguments.coordinates.Coordinates;
+import net.minecraft.commands.arguments.coordinates.Vec3Argument;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.Holder;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
+import net.minecraft.world.level.block.entity.TickingBlockEntity;
+import net.minecraft.world.level.levelgen.structure.Structure;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,52 +29,52 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static net.minecraft.server.command.CommandManager.argument;
-import static net.minecraft.server.command.CommandManager.literal;
+import static net.minecraft.commands.Commands.argument;
+import static net.minecraft.commands.Commands.literal;
 
 public class DebugCommand {
-    public static LiteralArgumentBuilder<ServerCommandSource> registerDebug(LiteralArgumentBuilder<ServerCommandSource> root) {
-        return root.then(literal("getBlockState").then(argument("location", Vec3ArgumentType.vec3()).executes(cmdCtx -> {
-            PosArgument loc = Vec3ArgumentType.getPosArgument(cmdCtx, "location");
-            BlockPos bp = loc.toAbsoluteBlockPos(cmdCtx.getSource());
-            ServerWorld sw = cmdCtx.getSource().getWorld();
+    public static LiteralArgumentBuilder<CommandSourceStack> registerDebug(LiteralArgumentBuilder<CommandSourceStack> root) {
+        return root.then(literal("getBlockState").then(argument("location", Vec3Argument.vec3()).executes(cmdCtx -> {
+            Coordinates loc = Vec3Argument.getCoordinates(cmdCtx, "location");
+            BlockPos bp = loc.getBlockPos(cmdCtx.getSource());
+            ServerLevel sw = cmdCtx.getSource().getLevel();
             BlockState bs = sw.getBlockState(bp);
-            MutableText message = Text.literal("Block at " + bp + " is " + bs.getBlock().getName());
-            cmdCtx.getSource().sendFeedback(message, true);
+            MutableComponent message = Component.literal("Block at " + bp + " is " + bs.getBlock().getName());
+            cmdCtx.getSource().sendSuccess(message, true);
             System.out.println(message);
             return 1;
-        }))).then(literal("nbtdump").then(argument("location", Vec3ArgumentType.vec3()).executes(cmdCtx -> {
-            PosArgument loc = Vec3ArgumentType.getPosArgument(cmdCtx, "location");
-            BlockPos bp = loc.toAbsoluteBlockPos(cmdCtx.getSource());
-            ServerWorld sw = cmdCtx.getSource().getWorld();
+        }))).then(literal("nbtdump").then(argument("location", Vec3Argument.vec3()).executes(cmdCtx -> {
+            Coordinates loc = Vec3Argument.getCoordinates(cmdCtx, "location");
+            BlockPos bp = loc.getBlockPos(cmdCtx.getSource());
+            ServerLevel sw = cmdCtx.getSource().getLevel();
             BlockState bs = sw.getBlockState(bp);
             BlockEntity te = sw.getBlockEntity(bp);
             if (te == null) {
-                MutableText message = Text.literal("Block at " + bp + " is " + bs.getBlock().getName() + " has no NBT");
-                cmdCtx.getSource().sendFeedback(message, true);
+                MutableComponent message = Component.literal("Block at " + bp + " is " + bs.getBlock().getName() + " has no NBT");
+                cmdCtx.getSource().sendSuccess(message, true);
                 return 1;
             }
-            NbtCompound nbt = te.toInitialChunkDataNbt();
+            CompoundTag nbt = te.getUpdateTag();
             String nbtStr = nbt.toString();
-            MutableText message = Text.literal("Block at " + bp + " is " + bs.getBlock().getName() + " with TE NBT:");
-            cmdCtx.getSource().sendFeedback(message, true);
-            cmdCtx.getSource().sendFeedback(Text.of(nbtStr), true);
+            MutableComponent message = Component.literal("Block at " + bp + " is " + bs.getBlock().getName() + " with TE NBT:");
+            cmdCtx.getSource().sendSuccess(message, true);
+            cmdCtx.getSource().sendSuccess(Component.nullToEmpty(nbtStr), true);
             return 1;
-        }))).then(literal("tick").requires(cmdSrc -> cmdSrc.hasPermissionLevel(2)).then(literal("te")).then(argument("location", Vec3ArgumentType.vec3()).executes(cmdCtx -> {
-            PosArgument loc = Vec3ArgumentType.getPosArgument(cmdCtx, "location");
-            BlockPos bp = loc.toAbsoluteBlockPos(cmdCtx.getSource());
-            ServerWorld sw = cmdCtx.getSource().getWorld();
+        }))).then(literal("tick").requires(cmdSrc -> cmdSrc.hasPermission(2)).then(literal("te")).then(argument("location", Vec3Argument.vec3()).executes(cmdCtx -> {
+            Coordinates loc = Vec3Argument.getCoordinates(cmdCtx, "location");
+            BlockPos bp = loc.getBlockPos(cmdCtx.getSource());
+            ServerLevel sw = cmdCtx.getSource().getLevel();
             BlockEntity te = sw.getBlockEntity(bp);
             if (te != null && ConfigCommand.isTickableBe(te)) {
-                ((BlockEntityTickInvoker) te).tick();
-                MutableText message = Text.literal("Ticked " + te.getClass().getName() + " at " + bp);
-                cmdCtx.getSource().sendFeedback(message, true);
+                ((TickingBlockEntity) te).tick();
+                MutableComponent message = Component.literal("Ticked " + te.getClass().getName() + " at " + bp);
+                cmdCtx.getSource().sendSuccess(message, true);
             } else {
-                MutableText message = Text.literal("No tickable TE at " + bp);
-                cmdCtx.getSource().sendError(message);
+                MutableComponent message = Component.literal("No tickable TE at " + bp);
+                cmdCtx.getSource().sendFailure(message);
             }
             return 1;
-        }))).then(literal("classpathDump").requires(cmdSrc -> cmdSrc.hasPermissionLevel(2)).executes(cmdCtx -> {
+        }))).then(literal("classpathDump").requires(cmdSrc -> cmdSrc.hasPermission(2)).executes(cmdCtx -> {
             java.nio.file.Path base = Paths.get("classpath_dump/");
             try {
                 Files.createDirectories(base);
@@ -98,34 +98,34 @@ public class DebugCommand {
             });
 
 
-            MutableText message = Text.literal("Classpath Dumped to: " + base.toAbsolutePath().toString());
-            cmdCtx.getSource().sendFeedback(message, true);
+            MutableComponent message = Component.literal("Classpath Dumped to: " + base.toAbsolutePath().toString());
+            cmdCtx.getSource().sendSuccess(message, true);
             System.out.println(message);
             return 1;
         }))
-                /* 1.16.1 code; AKA the only thing that changed  */.then(literal("test").requires(cmdSrc -> cmdSrc.hasPermissionLevel(2)).then(literal("structures").executes(cmdCtx -> {
-                    ServerPlayerEntity p = cmdCtx.getSource().getPlayer();
+                /* 1.16.1 code; AKA the only thing that changed  */.then(literal("test").requires(cmdSrc -> cmdSrc.hasPermission(2)).then(literal("structures").executes(cmdCtx -> {
+                    ServerPlayer p = cmdCtx.getSource().getPlayer();
                     assert p != null;
-                    BlockPos srcPos = p.getBlockPos();
-                    UUID id = p.getUuid();
+                    BlockPos srcPos = p.blockPosition();
+                    UUID id = p.getUUID();
                     int index = structureIdx.computeIfAbsent(id.toString(), (s) -> new AtomicInteger()).getAndIncrement();
-                    Registry<Structure> registry = cmdCtx.getSource().getWorld().getRegistryManager().get(Registry.STRUCTURE_KEY);
-                    var targets = registry.streamEntries().toList();
-                    RegistryEntry.Reference<Structure> target;
+                    Registry<Structure> registry = cmdCtx.getSource().getLevel().registryAccess().registryOrThrow(Registry.STRUCTURE_REGISTRY);
+                    var targets = registry.holders().toList();
+                    Holder.Reference<Structure> target;
                     if (index >= targets.size()) {
                         target = targets.get(0);
                         structureIdx.computeIfAbsent(id.toString(), (s) -> new AtomicInteger()).set(0);
                     } else {
                         target = targets.get(index);
                     }
-//                    Pair<BlockPos, RegistryKey<Structure>> dst = cmdCtx.getSource().getWorld().getChunkManager().getChunkGenerator().locateStructure(cmdCtx.getSource().getWorld(), RegistryKey.of(target), srcPos, 100, false);
+//                    Pair<BlockPos, RegistryKey<Structure>> dst = cmdCtx.getSource().getLevel().getChunkManager().getChunkGenerator().locateStructure(cmdCtx.getSource().getLevel(), RegistryKey.of(target), srcPos, 100, false);
 //                    if (dst == null) {
-//                        MutableText message = Text.literal("Failed locating " + target.registryKey().getValue().toString() + " from " + srcPos);
-//                        cmdCtx.getSource().sendFeedback(message, true);
+//                        MutableComponent message = Component.literal("Failed locating " + target.registryKey().getValue().toString() + " from " + srcPos);
+//                        cmdCtx.getSource().sendSuccess(message, true);
 //                        return 1;
 //                    }
-//                    MutableText message = Text.literal("Found target; loading now");
-//                    cmdCtx.getSource().sendFeedback(message, true);
+//                    MutableComponent message = Component.literal("Found target; loading now");
+//                    cmdCtx.getSource().sendSuccess(message, true);
 //                    p.teleport(dst.getFirst().getX(), srcPos.getY(), dst.getFirst().getZ());
                     //LocateCommand.showLocateResult(cmdCtx.getSource(), ResourceOrTagLocationArgument.getStructureFeature(p_207508_, "structure"), srcpos, dst, "commands.locate.success");
                     return 1;
@@ -133,9 +133,9 @@ public class DebugCommand {
         /* */
 				/*
 				.then(literal("goinf").requires(cmdSrc -> {
-					return cmdSrc.hasPermissionLevel(2);
+					return cmdSrc.hasPermission(2);
 				}).executes(cmdCtx -> {
-					ServerPlayerEntity p = cmdCtx.getSource().asPlayer();
+					ServerPlayer p = cmdCtx.getSource().asPlayer();
 					p.setPosition(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
 					return 1;
 				}))

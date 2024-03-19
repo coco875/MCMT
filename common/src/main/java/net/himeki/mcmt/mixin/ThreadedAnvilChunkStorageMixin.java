@@ -2,8 +2,8 @@ package net.himeki.mcmt.mixin;
 
 import com.mojang.datafixers.DataFixer;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import net.minecraft.server.world.ChunkHolder;
-import net.minecraft.server.world.ThreadedAnvilChunkStorage;
+import net.minecraft.server.level.ChunkHolder;
+import net.minecraft.server.level.ThreadedAnvilChunkStorage;
 import net.minecraft.world.storage.VersionedChunkStorage;
 
 import net.himeki.mcmt.parallelised.fastutil.Int2ObjectConcurrentHashMap;

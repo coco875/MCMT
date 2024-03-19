@@ -1,6 +1,6 @@
 package net.himeki.mcmt.serdes.pools;
 
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.World;
 
 import java.util.Deque;

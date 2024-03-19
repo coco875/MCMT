@@ -4,17 +4,17 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import me.shedaniel.autoconfig.AutoConfig;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityTicker;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.chunk.BlockEntityTickInvoker;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.entity.TickingBlockEntity;
 
-import static net.minecraft.server.command.CommandManager.literal;
+import static net.minecraft.commands.Commands.literal;
 
 import net.himeki.mcmt.ParallelProcessor;
 import net.himeki.mcmt.MCMT;
@@ -22,53 +22,53 @@ import net.himeki.mcmt.config.BlockEntityLists;
 import net.himeki.mcmt.config.GeneralConfig;
 
 public class ConfigCommand {
-    public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
-        LiteralArgumentBuilder<ServerCommandSource> mcmtconfig = literal("mcmt");
+    public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
+        LiteralArgumentBuilder<CommandSourceStack> mcmtconfig = literal("mcmt");
         mcmtconfig = mcmtconfig.then(registerConfig(literal("config")));
         mcmtconfig = mcmtconfig.then(DebugCommand.registerDebug(literal("debug")));
         mcmtconfig = StatsCommand.registerStatus(mcmtconfig);
         dispatcher.register(mcmtconfig);
     }
 
-    public static ArgumentBuilder<ServerCommandSource, ?> registerConfig(LiteralArgumentBuilder<ServerCommandSource> root) {
+    public static ArgumentBuilder<CommandSourceStack, ?> registerConfig(LiteralArgumentBuilder<CommandSourceStack> root) {
         GeneralConfig config = MCMT.config;
         return root.then(literal("toggle").requires(cmdSrc -> {
-                            return cmdSrc.hasPermissionLevel(2);
+                            return cmdSrc.hasPermission(2);
                         }).executes(cmdCtx -> {
                             config.disabled = !config.disabled;
-                            MutableText message = Text.literal(
+                            MutableComponent message = Component.literal(
                                     "MCMT is now " + (config.disabled ? "disabled" : "enabled"));
-                            cmdCtx.getSource().sendFeedback(message, true);
+                            cmdCtx.getSource().sendSuccess(message, true);
                             return 1;
                         }).then(literal("te").executes(cmdCtx -> {
                             config.disableTileEntity = !config.disableTileEntity;
-                            MutableText message = Text.literal("MCMT's tile entity threading is now "
+                            MutableComponent message = Component.literal("MCMT's tile entity threading is now "
                                     + (config.disableTileEntity ? "disabled" : "enabled"));
-                            cmdCtx.getSource().sendFeedback(message, true);
+                            cmdCtx.getSource().sendSuccess(message, true);
                             return 1;
                         })).then(literal("entity").executes(cmdCtx -> {
                             config.disableEntity = !config.disableEntity;
-                            MutableText message = Text.literal(
+                            MutableComponent message = Component.literal(
                                     "MCMT's entity threading is now " + (config.disableEntity ? "disabled" : "enabled"));
-                            cmdCtx.getSource().sendFeedback(message, true);
+                            cmdCtx.getSource().sendSuccess(message, true);
                             return 1;
                         })).then(literal("environment").executes(cmdCtx -> {
                             config.disableEnvironment = !config.disableEnvironment;
-                            MutableText message = Text.literal("MCMT's environment threading is now "
+                            MutableComponent message = Component.literal("MCMT's environment threading is now "
                                     + (config.disableEnvironment ? "disabled" : "enabled"));
-                            cmdCtx.getSource().sendFeedback(message, true);
+                            cmdCtx.getSource().sendSuccess(message, true);
                             return 1;
                         })).then(literal("world").executes(cmdCtx -> {
                             config.disableWorld = !config.disableWorld;
-                            MutableText message = Text.literal(
+                            MutableComponent message = Component.literal(
                                     "MCMT's world threading is now " + (config.disableWorld ? "disabled" : "enabled"));
-                            cmdCtx.getSource().sendFeedback(message, true);
+                            cmdCtx.getSource().sendSuccess(message, true);
                             return 1;
                         })).then(literal("ops").executes(cmdCtx -> {
                             config.opsTracing = !config.opsTracing;
-                            MutableText message = Text.literal(
+                            MutableComponent message = Component.literal(
                                     "MCMT's ops tracing is now " + (!config.opsTracing ? "disabled" : "enabled"));
-                            cmdCtx.getSource().sendFeedback(message, true);
+                            cmdCtx.getSource().sendSuccess(message, true);
                             return 1;
                         }))
                 )
@@ -83,129 +83,129 @@ public class ConfigCommand {
                         messageString.append(" Env:" + (config.disableEnvironment ? "disabled" : "enabled"));
                         messageString.append(" SCP:" + (config.disableChunkProvider ? "disabled" : "enabled"));
                     }
-                    MutableText message = Text.literal(messageString.toString());
-                    cmdCtx.getSource().sendFeedback(message, true);
+                    MutableComponent message = Component.literal(messageString.toString());
+                    cmdCtx.getSource().sendSuccess(message, true);
                     return 1;
                 }))
                 .then(literal("save").requires(cmdSrc -> {
-                    return cmdSrc.hasPermissionLevel(2);
+                    return cmdSrc.hasPermission(2);
                 }).executes(cmdCtx -> {
-                    MutableText message = Text.literal("Saving MCMT config to disk...");
-                    cmdCtx.getSource().sendFeedback(message, true);
+                    MutableComponent message = Component.literal("Saving MCMT config to disk...");
+                    cmdCtx.getSource().sendSuccess(message, true);
                     AutoConfig.getConfigHolder(GeneralConfig.class).save();
-                    message = Text.literal("Done!");
-                    cmdCtx.getSource().sendFeedback(message, true);
+                    message = Component.literal("Done!");
+                    cmdCtx.getSource().sendSuccess(message, true);
                     return 1;
                 }))
                 .then(literal("temanage").requires(cmdSrc -> {
-                            return cmdSrc.hasPermissionLevel(2);
+                            return cmdSrc.hasPermission(2);
                         }).then(literal("list")
                                 .executes(cmdCtx -> {
-                                    MutableText message = Text.literal("NYI");
-                                    cmdCtx.getSource().sendFeedback(message, true);
+                                    MutableComponent message = Component.literal("NYI");
+                                    cmdCtx.getSource().sendSuccess(message, true);
                                     return 1;
                                 })).then(literal("target")
                                 .requires(cmdSrc -> {
                                     if (cmdSrc.getPlayer() != null) {
                                         return true;
                                     }
-                                    MutableText message = Text.literal("Only runnable by player!");
-                                    cmdSrc.sendError(message);
+                                    MutableComponent message = Component.literal("Only runnable by player!");
+                                    cmdSrc.sendFailure(message);
                                     return false;
                                 }).then(literal("whitelist").executes(cmdCtx -> {
-                                    MutableText message;
-                                    HitResult htr = cmdCtx.getSource().getPlayer().raycast(20, 0.0F, false);
+                                    MutableComponent message;
+                                    HitResult htr = cmdCtx.getSource().getPlayer().pick(20, 0.0F, false);
                                     if (htr.getType() == HitResult.Type.BLOCK) {
                                         BlockPos bp = ((BlockHitResult) htr).getBlockPos();
-                                        BlockEntity te = cmdCtx.getSource().getWorld().getBlockEntity(bp);
+                                        BlockEntity te = cmdCtx.getSource().getLevel().getBlockEntity(bp);
                                         if (te != null && isTickableBe(te)) {
                                             if (config.teWhiteListString.contains(te.getClass().getName())) {
-                                                message = Text.literal("Class " + te.getClass().getName() + " already exists in TE Whitelist");
-                                                cmdCtx.getSource().sendFeedback(message, true);
+                                                message = Component.literal("Class " + te.getClass().getName() + " already exists in TE Whitelist");
+                                                cmdCtx.getSource().sendSuccess(message, true);
                                                 return 0;
                                             }
                                             BlockEntityLists.teWhiteList.add(te.getClass());
                                             config.teWhiteListString.add(te.getClass().getName());
                                             BlockEntityLists.teBlackList.remove(te.getClass());
                                             config.teBlackListString.remove(te.getClass().getName());
-                                            message = Text.literal("Added " + te.getClass().getName() + " to TE Whitelist");
-                                            cmdCtx.getSource().sendFeedback(message, true);
+                                            message = Component.literal("Added " + te.getClass().getName() + " to TE Whitelist");
+                                            cmdCtx.getSource().sendSuccess(message, true);
                                             return 1;
                                         }
-                                        message = Text.literal("That block doesn't contain a tickable TE!");
-                                        cmdCtx.getSource().sendError(message);
+                                        message = Component.literal("That block doesn't contain a tickable TE!");
+                                        cmdCtx.getSource().sendFailure(message);
                                         return 0;
                                     }
-                                    message = Text.literal("Only runable by player!");
-                                    cmdCtx.getSource().sendError(message);
+                                    message = Component.literal("Only runable by player!");
+                                    cmdCtx.getSource().sendFailure(message);
                                     return 0;
                                 })).then(literal("blacklist").executes(cmdCtx -> {
-                                    MutableText message;
-                                    HitResult htr = cmdCtx.getSource().getPlayer().raycast(20, 0.0F, false);
+                                    MutableComponent message;
+                                    HitResult htr = cmdCtx.getSource().getPlayer().pick(20, 0.0F, false);
                                     if (htr.getType() == HitResult.Type.BLOCK) {
                                         BlockPos bp = ((BlockHitResult) htr).getBlockPos();
-                                        BlockEntity te = cmdCtx.getSource().getWorld().getBlockEntity(bp);
+                                        BlockEntity te = cmdCtx.getSource().getLevel().getBlockEntity(bp);
                                         if (te != null && isTickableBe(te)) {
                                             if (config.teBlackListString.contains(te.getClass().getName())) {
-                                                message = Text.literal("Class " + te.getClass().getName() + " already exists in TE Blacklist");
-                                                cmdCtx.getSource().sendFeedback(message, true);
+                                                message = Component.literal("Class " + te.getClass().getName() + " already exists in TE Blacklist");
+                                                cmdCtx.getSource().sendSuccess(message, true);
                                                 return 0;
                                             }
                                             BlockEntityLists.teBlackList.add(te.getClass());
                                             config.teBlackListString.add(te.getClass().getName());
                                             BlockEntityLists.teWhiteList.remove(te.getClass());
                                             config.teWhiteListString.remove(te.getClass().getName());
-                                            message = Text.literal("Added " + te.getClass().getName() + " to TE Blacklist");
-                                            cmdCtx.getSource().sendFeedback(message, true);
+                                            message = Component.literal("Added " + te.getClass().getName() + " to TE Blacklist");
+                                            cmdCtx.getSource().sendSuccess(message, true);
                                             return 1;
                                         }
-                                        message = Text.literal("That block doesn't contain a tickable TE!");
-                                        cmdCtx.getSource().sendError(message);
+                                        message = Component.literal("That block doesn't contain a tickable TE!");
+                                        cmdCtx.getSource().sendFailure(message);
                                         return 0;
                                     }
-                                    message = Text.literal("Only runnable by player!");
-                                    cmdCtx.getSource().sendError(message);
+                                    message = Component.literal("Only runnable by player!");
+                                    cmdCtx.getSource().sendFailure(message);
                                     return 0;
                                 })).then(literal("remove").executes(cmdCtx -> {
-                                    MutableText message;
-                                    HitResult htr = cmdCtx.getSource().getPlayer().raycast(20, 0.0F, false);
+                                    MutableComponent message;
+                                    HitResult htr = cmdCtx.getSource().getPlayer().pick(20, 0.0F, false);
                                     if (htr.getType() == HitResult.Type.BLOCK) {
                                         BlockPos bp = ((BlockHitResult) htr).getBlockPos();
-                                        BlockEntity te = cmdCtx.getSource().getWorld().getBlockEntity(bp);
+                                        BlockEntity te = cmdCtx.getSource().getLevel().getBlockEntity(bp);
                                         if (te != null && isTickableBe(te)) {
                                             BlockEntityLists.teBlackList.remove(te.getClass());
                                             config.teBlackListString.remove(te.getClass().getName());
                                             BlockEntityLists.teWhiteList.remove(te.getClass());
                                             config.teWhiteListString.remove(te.getClass().getName());
-                                            message = Text.literal("Removed " + te.getClass().getName() + " from TE classlists");
-                                            cmdCtx.getSource().sendFeedback(message, true);
+                                            message = Component.literal("Removed " + te.getClass().getName() + " from TE classlists");
+                                            cmdCtx.getSource().sendSuccess(message, true);
                                             return 1;
                                         }
-                                        message = Text.literal("That block doesn't contain a tickable TE!");
-                                        cmdCtx.getSource().sendError(message);
+                                        message = Component.literal("That block doesn't contain a tickable TE!");
+                                        cmdCtx.getSource().sendFailure(message);
                                         return 0;
                                     }
-                                    message = Text.literal("Only runable by player!");
-                                    cmdCtx.getSource().sendError(message);
+                                    message = Component.literal("Only runable by player!");
+                                    cmdCtx.getSource().sendFailure(message);
                                     return 0;
                                 })).then(literal("willtick").executes(cmdCtx -> {
-                                    MutableText message;
-                                    HitResult htr = cmdCtx.getSource().getPlayer().raycast(20, 0.0F, false);
+                                    MutableComponent message;
+                                    HitResult htr = cmdCtx.getSource().getPlayer().pick(20, 0.0F, false);
                                     if (htr.getType() == HitResult.Type.BLOCK) {
                                         BlockPos bp = ((BlockHitResult) htr).getBlockPos();
-                                        BlockEntity te = cmdCtx.getSource().getWorld().getBlockEntity(bp);
+                                        BlockEntity te = cmdCtx.getSource().getLevel().getBlockEntity(bp);
                                         if (isTickableBe(te)) {
-                                            boolean willSerial = ParallelProcessor.filterTE((BlockEntityTickInvoker) te);
-                                            message = Text.literal("That TE " + (!willSerial ? "will" : "will not") + " tick fully parallelised");
-                                            cmdCtx.getSource().sendFeedback(message, true);
+                                            boolean willSerial = ParallelProcessor.filterTE((TickingBlockEntity) te);
+                                            message = Component.literal("That TE " + (!willSerial ? "will" : "will not") + " tick fully parallelised");
+                                            cmdCtx.getSource().sendSuccess(message, true);
                                             return 1;
                                         }
-                                        message = Text.literal("That block doesn't contain a tickable TE!");
-                                        cmdCtx.getSource().sendError(message);
+                                        message = Component.literal("That block doesn't contain a tickable TE!");
+                                        cmdCtx.getSource().sendFailure(message);
                                         return 0;
                                     }
-                                    message = Text.literal("Only runable by player!");
-                                    cmdCtx.getSource().sendError(message);
+                                    message = Component.literal("Only runable by player!");
+                                    cmdCtx.getSource().sendFailure(message);
                                     return 0;
                                 }))
                         )
@@ -213,7 +213,7 @@ public class ConfigCommand {
     }
 
     public static boolean isTickableBe(BlockEntity be) {
-        BlockEntityTicker<?> blockEntityTicker = be.getCachedState().getBlockEntityTicker(be.getWorld(), be.getType());
+        BlockEntityTicker<?> blockEntityTicker = be.getBlockState().getTicker(be.getLevel(), be.getType());
         return blockEntityTicker != null;
     }
 }

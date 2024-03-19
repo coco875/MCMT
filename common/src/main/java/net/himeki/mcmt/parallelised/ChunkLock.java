@@ -1,6 +1,6 @@
 package net.himeki.mcmt.parallelised;
 
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import org.apache.commons.lang3.ArrayUtils;
 

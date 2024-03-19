@@ -3,9 +3,9 @@ package net.himeki.mcmt.commands;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Component;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import net.himeki.mcmt.MCMT;
@@ -16,39 +16,39 @@ import java.io.FileWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static net.minecraft.server.command.CommandManager.literal;
+import static net.minecraft.commands.Commands.literal;
 
 public class StatsCommand {
-    public static LiteralArgumentBuilder<ServerCommandSource> registerStatus(LiteralArgumentBuilder<ServerCommandSource> root) {
+    public static LiteralArgumentBuilder<CommandSourceStack> registerStatus(LiteralArgumentBuilder<CommandSourceStack> root) {
         return root.then(literal("stats").then(literal("reset").executes(cmdCtx -> {
             resetAll();
             return 1;
         })).executes(cmdCtx -> {
             if (!threadStats) {
-                MutableText message = Text.literal("Stat calcs are disabled so stats are out of date");
-                cmdCtx.getSource().sendFeedback(message, true);
+                MutableComponent message = Component.literal("Stat calcs are disabled so stats are out of date");
+                cmdCtx.getSource().sendSuccess(message, true);
             }
             StringBuilder messageString = new StringBuilder("Current max threads " + mean(maxThreads, liveValues) + " (");
             messageString.append("World:" + mean(maxWorlds, liveValues));
             messageString.append(" Entity:" + mean(maxEntities, liveValues));
             messageString.append(" TE:" + mean(maxTEs, liveValues));
             messageString.append(" Env:" + mean(maxEnvs, liveValues) + ")");
-            MutableText message = Text.literal(messageString.toString());
-            cmdCtx.getSource().sendFeedback(message, true);
+            MutableComponent message = Component.literal(messageString.toString());
+            cmdCtx.getSource().sendSuccess(message, true);
             return 1;
-        }).then(literal("toggle").requires(cmdSrc -> cmdSrc.hasPermissionLevel(2)).executes(cmdCtx -> {
+        }).then(literal("toggle").requires(cmdSrc -> cmdSrc.hasPermission(2)).executes(cmdCtx -> {
             threadStats = !threadStats;
-            MutableText message = Text.literal("Stat calcs are " + (!threadStats ? "disabled" : "enabled") + "!");
-            cmdCtx.getSource().sendFeedback(message, true);
+            MutableComponent message = Component.literal("Stat calcs are " + (!threadStats ? "disabled" : "enabled") + "!");
+            cmdCtx.getSource().sendSuccess(message, true);
             return 1;
-        })).then(literal("startlog").requires(cmdSrc -> cmdSrc.hasPermissionLevel(2)).executes(cmdCtx -> {
+        })).then(literal("startlog").requires(cmdSrc -> cmdSrc.hasPermission(2)).executes(cmdCtx -> {
             doLogging = true;
-            MutableText message = Text.literal("Logging started!");
-            cmdCtx.getSource().sendFeedback(message, true);
+            MutableComponent message = Component.literal("Logging started!");
+            cmdCtx.getSource().sendSuccess(message, true);
             return 1;
-        })).then(literal("stoplog").requires(cmdSrc -> cmdSrc.hasPermissionLevel(2)).executes(cmdCtx -> {
-            MutableText message = Text.literal("Logging stopping...");
-            cmdCtx.getSource().sendFeedback(message, true);
+        })).then(literal("stoplog").requires(cmdSrc -> cmdSrc.hasPermission(2)).executes(cmdCtx -> {
+            MutableComponent message = Component.literal("Logging stopping...");
+            cmdCtx.getSource().sendSuccess(message, true);
             doLogging = false;
             return 1;
         })));
@@ -164,7 +164,7 @@ public class StatsCommand {
                             if (currentSteps % stepsPer == 0) {
                                 float ticktime = -1;
                                 if (mcs != null && mcs.isRunning()) {
-                                    ticktime = mcs.getTickTime();
+                                    ticktime = mcs.getAverageTickTime();
                                 }
                                 float threadCount = mean(maxThreads, liveValues);
                                 long memory = Runtime.getRuntime().maxMemory() - Runtime.getRuntime().freeMemory();

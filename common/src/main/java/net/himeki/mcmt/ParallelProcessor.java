@@ -1,13 +1,13 @@
 package net.himeki.mcmt;
 
-import net.minecraft.block.entity.PistonBlockEntity;
+import net.minecraft.world.level.block.entity.PistonBlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.FallingBlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.World;
-import net.minecraft.world.chunk.BlockEntityTickInvoker;
+import net.minecraft.world.level.block.entity.TickingBlockEntity;
 import net.minecraft.world.chunk.WorldChunk;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -31,7 +31,7 @@ public class ParallelProcessor {
 
     static Phaser worldPhaser;
 
-    static ConcurrentHashMap<ServerWorld, Phaser> sharedPhasers = new ConcurrentHashMap<>();
+    static ConcurrentHashMap<ServerLevel, Phaser> sharedPhasers = new ConcurrentHashMap<>();
     static ExecutorService worldPool;
     static ExecutorService tickPool;
     static MinecraftServer mcs;
@@ -112,7 +112,7 @@ public class ParallelProcessor {
         }
     }
 
-    public static void callTick(ServerWorld serverworld, BooleanSupplier hasTimeLeft, MinecraftServer server) {
+    public static void callTick(ServerLevel serverworld, BooleanSupplier hasTimeLeft, MinecraftServer server) {
         if (config.disabled || config.disableWorld) {
             try {
                 serverworld.tick(hasTimeLeft);
@@ -175,7 +175,7 @@ public class ParallelProcessor {
         }
     }
 
-    public static void preChunkTick(ServerWorld world) {
+    public static void preChunkTick(ServerLevel world) {
         Phaser phaser; // Keep a party throughout 3 ticking phases
         if (!config.disabled && !config.disableEnvironment) {
             phaser = new Phaser(2);
@@ -185,7 +185,7 @@ public class ParallelProcessor {
         sharedPhasers.put(world, phaser);
     }
 
-    public static void callTickChunks(ServerWorld world, WorldChunk chunk, int k) {
+    public static void callTickChunks(ServerLevel world, WorldChunk chunk, int k) {
         if (config.disabled || config.disableEnvironment) {
             world.tickChunk(chunk, k);
             return;
@@ -210,7 +210,7 @@ public class ParallelProcessor {
         });
     }
 
-    public static void postChunkTick(ServerWorld world) {
+    public static void postChunkTick(ServerLevel world) {
         if (!config.disabled && !config.disableEnvironment) {
             var phaser = sharedPhasers.get(world);
             phaser.arriveAndDeregister();
@@ -218,11 +218,11 @@ public class ParallelProcessor {
         }
     }
 
-    public static void preEntityTick(ServerWorld world) {
+    public static void preEntityTick(ServerLevel world) {
         if (!config.disabled && !config.disableEntity) sharedPhasers.get(world).register();
     }
 
-    public static void callEntityTick(Consumer<Entity> tickConsumer, Entity entityIn, ServerWorld serverworld) {
+    public static void callEntityTick(Consumer<Entity> tickConsumer, Entity entityIn, ServerLevel serverworld) {
         if (config.disabled || config.disableEntity) {
             tickConsumer.accept(entityIn);
             return;
@@ -256,7 +256,7 @@ public class ParallelProcessor {
         });
     }
 
-    public static void postEntityTick(ServerWorld world) {
+    public static void postEntityTick(ServerLevel world) {
         if (!config.disabled && !config.disableEntity) {
             var phaser = sharedPhasers.get(world);
             phaser.arriveAndDeregister();
@@ -264,17 +264,17 @@ public class ParallelProcessor {
         }
     }
 
-    public static void preBlockEntityTick(ServerWorld world) {
+    public static void preBlockEntityTick(ServerLevel world) {
         if (!config.disabled && !config.disableTileEntity) sharedPhasers.get(world).register();
     }
 
-    public static void callBlockEntityTick(BlockEntityTickInvoker tte, World world) {
-        if ((world instanceof ServerWorld) && tte instanceof WorldChunk.WrappedBlockEntityTickInvoker && (((WorldChunk.WrappedBlockEntityTickInvoker) tte).wrapped instanceof WorldChunk.DirectBlockEntityTickInvoker<?>)) {
+    public static void callBlockEntityTick(TickingBlockEntity tte, World world) {
+        if ((world instanceof ServerLevel) && tte instanceof WorldChunk.WrappedTickingBlockEntity && (((WorldChunk.WrappedTickingBlockEntity) tte).wrapped instanceof WorldChunk.DirectTickingBlockEntity<?>)) {
             if (config.disabled || config.disableTileEntity) {
                 tte.tick();
                 return;
             }
-            if (((WorldChunk.DirectBlockEntityTickInvoker<?>) ((WorldChunk.WrappedBlockEntityTickInvoker) tte).wrapped).blockEntity instanceof PistonBlockEntity) {
+            if (((WorldChunk.DirectTickingBlockEntity<?>) ((WorldChunk.WrappedTickingBlockEntity) tte).wrapped).blockEntity instanceof PistonBlockEntity) {
                 tte.tick();
                 return;
             }
@@ -288,7 +288,7 @@ public class ParallelProcessor {
             sharedPhasers.get(world).register();
             tickPool.execute(() -> {
                 try {
-                    final ISerDesFilter filter = SerDesRegistry.getFilter(SerDesHookTypes.TETick, ((WorldChunk.WrappedBlockEntityTickInvoker) tte).wrapped.getClass());
+                    final ISerDesFilter filter = SerDesRegistry.getFilter(SerDesHookTypes.TETick, ((WorldChunk.WrappedTickingBlockEntity) tte).wrapped.getClass());
                     currentTEs.incrementAndGet();
                     if (filter != null) filter.serialise(tte::tick, tte, tte.getPos(), world, SerDesHookTypes.TETick);
                     else tte.tick();
@@ -304,13 +304,13 @@ public class ParallelProcessor {
         } else tte.tick();
     }
 
-    public static boolean filterTE(BlockEntityTickInvoker tte) {
+    public static boolean filterTE(TickingBlockEntity tte) {
         boolean isLocking = false;
         if (BlockEntityLists.teBlackList.contains(tte.getClass())) {
             isLocking = true;
         }
         // Apparently a string starts with check is faster than Class.getPackage; who knew (I didn't)
-        if (!isLocking && config.chunkLockModded && !tte.getClass().getName().startsWith("net.minecraft.block.entity.")) {
+        if (!isLocking && config.chunkLockModded && !tte.getClass().getName().startsWith("net.minecraft.world.level.block.entity.")) {
             isLocking = true;
         }
         if (isLocking && BlockEntityLists.teWhiteList.contains(tte.getClass())) {
@@ -322,7 +322,7 @@ public class ParallelProcessor {
         return isLocking;
     }
 
-    public static void postBlockEntityTick(ServerWorld world) {
+    public static void postBlockEntityTick(ServerLevel world) {
         if (!config.disabled && !config.disableTileEntity) {
             var phaser = sharedPhasers.get(world);
             phaser.arriveAndDeregister();

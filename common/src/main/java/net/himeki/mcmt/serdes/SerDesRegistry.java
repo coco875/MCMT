@@ -9,8 +9,8 @@ import java.util.function.Supplier;
 
 import com.google.common.collect.Lists;
 
-import net.minecraft.block.entity.PistonBlockEntity;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.level.block.entity.PistonBlockEntity;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.World;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -193,7 +193,7 @@ public class SerDesRegistry {
                 isLocking = true;
             }
             // Apparently a string starts with check is faster than Class.getPackage; who knew (I didn't)
-            if (!isLocking && config.chunkLockModded && !tte.getClass().getName().startsWith("net.minecraft.block.entity.")) {
+            if (!isLocking && config.chunkLockModded && !tte.getClass().getName().startsWith("net.minecraft.world.level.block.entity.")) {
                 isLocking = true;
             }
             if (isLocking && BlockEntityLists.teWhiteList.contains(tte.getClass())) {

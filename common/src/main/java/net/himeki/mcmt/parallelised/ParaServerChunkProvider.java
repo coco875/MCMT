@@ -3,8 +3,8 @@ package net.himeki.mcmt.parallelised;
 import com.mojang.datafixers.DataFixer;
 
 import net.minecraft.server.WorldGenerationProgressListener;
-import net.minecraft.server.world.ServerChunkManager;
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.server.level.ServerChunkManager;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.structure.StructureTemplateManager;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.PersistentStateManager;
@@ -56,7 +56,7 @@ public class ParaServerChunkProvider extends ServerChunkManager {
     private final World world;
 
     /* 1.16.1 code; AKA the only thing that changed  */
-    public ParaServerChunkProvider(ServerWorld world, LevelStorage.Session session, DataFixer dataFixer, StructureTemplateManager structureManager, Executor workerExecutor, ChunkGenerator chunkGenerator, int viewDistance, int simulationDistance, boolean dsync, WorldGenerationProgressListener worldGenerationProgressListener, ChunkStatusChangeListener chunkStatusChangeListener, Supplier<PersistentStateManager> persistentStateManagerFactory) {
+    public ParaServerChunkProvider(ServerLevel world, LevelStorage.Session session, DataFixer dataFixer, StructureTemplateManager structureManager, Executor workerExecutor, ChunkGenerator chunkGenerator, int viewDistance, int simulationDistance, boolean dsync, WorldGenerationProgressListener worldGenerationProgressListener, ChunkStatusChangeListener chunkStatusChangeListener, Supplier<PersistentStateManager> persistentStateManagerFactory) {
         super(world, session, dataFixer, structureManager, workerExecutor, chunkGenerator, viewDistance, simulationDistance, dsync, worldGenerationProgressListener, chunkStatusChangeListener, persistentStateManagerFactory);
         this.world = world;
         cacheThread = new Thread(this::chunkCacheCleanup, "Chunk Cache Cleaner " + world.getRegistryKey().getValue().getPath());
@@ -75,7 +75,7 @@ public class ParaServerChunkProvider extends ServerChunkManager {
     /* */
 
 	/* 1.15.2 code; AKA the only thing that changed
-	public ParaServerChunkProvider(ServerWorld worldIn, File worldDirectory, DataFixer dataFixer,
+	public ParaServerChunkProvider(ServerLevel worldIn, File worldDirectory, DataFixer dataFixer,
 			TemplateManager templateManagerIn, Executor executorIn, ChunkGenerator<?> chunkGeneratorIn,
 			int viewDistance, IChunkStatusListener p_i51537_8_, Supplier<DimensionSavedDataManager> p_i51537_9_) {
 		super(worldIn, worldDirectory, dataFixer, templateManagerIn, executorIn, chunkGeneratorIn, viewDistance, p_i51537_8_,

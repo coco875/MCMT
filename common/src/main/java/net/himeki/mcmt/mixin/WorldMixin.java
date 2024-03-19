@@ -1,9 +1,9 @@
 package net.himeki.mcmt.mixin;
 
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
-import net.minecraft.world.chunk.BlockEntityTickInvoker;
+import net.minecraft.world.level.block.entity.TickingBlockEntity;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ReadOnlyChunk;
 
@@ -27,8 +27,8 @@ public abstract class WorldMixin implements WorldAccess, AutoCloseable {
 
     @Inject(method = "tickBlockEntities", at = @At(value = "INVOKE", target = "Ljava/util/List;iterator()Ljava/util/Iterator;"))
     private void postEntityPreBlockEntityTick(CallbackInfo ci) {
-        if ((Object) this instanceof ServerWorld) {
-            ServerWorld thisWorld = (ServerWorld) (Object) this;
+        if ((Object) this instanceof ServerLevel) {
+            ServerLevel thisWorld = (ServerLevel) (Object) this;
             ParallelProcessor.postEntityTick(thisWorld);
             ParallelProcessor.preBlockEntityTick(thisWorld);
         }
@@ -36,14 +36,14 @@ public abstract class WorldMixin implements WorldAccess, AutoCloseable {
 
     @Inject(method = "tickBlockEntities", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/profiler/Profiler;pop()V"))
     private void postBlockEntityTick(CallbackInfo ci) {
-        if ((Object) this instanceof ServerWorld) {
-            ServerWorld thisWorld = (ServerWorld) (Object) this;
+        if ((Object) this instanceof ServerLevel) {
+            ServerLevel thisWorld = (ServerLevel) (Object) this;
             ParallelProcessor.postBlockEntityTick(thisWorld);
         }
     }
 
-    @Redirect(method = "tickBlockEntities", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/chunk/BlockEntityTickInvoker;tick()V"))
-    private void overwriteBlockEntityTick(BlockEntityTickInvoker blockEntityTickInvoker) {
+    @Redirect(method = "tickBlockEntities", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/chunk/TickingBlockEntity;tick()V"))
+    private void overwriteBlockEntityTick(TickingBlockEntity blockEntityTickInvoker) {
         ParallelProcessor.callBlockEntityTick(blockEntityTickInvoker, (World) (Object) this);
     }
 

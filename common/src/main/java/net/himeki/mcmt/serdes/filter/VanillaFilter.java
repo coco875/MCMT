@@ -2,7 +2,7 @@ package net.himeki.mcmt.serdes.filter;
 
 import net.himeki.mcmt.serdes.ISerDesHookType;
 
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.World;
 
 public class VanillaFilter implements ISerDesFilter {

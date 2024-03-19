@@ -1,7 +1,7 @@
 package net.himeki.mcmt.mixin;
 
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.chunk.Chunk;
 
 import net.himeki.mcmt.parallelised.ConcurrentCollections;

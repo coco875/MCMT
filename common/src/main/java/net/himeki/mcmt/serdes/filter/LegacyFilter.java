@@ -11,7 +11,7 @@ import net.himeki.mcmt.serdes.pools.ISerDesPool;
 import net.himeki.mcmt.serdes.pools.ISerDesPool.ISerDesOptions;
 import net.himeki.mcmt.serdes.ISerDesHookType;
 
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.World;
 
 public class LegacyFilter implements ISerDesFilter {
