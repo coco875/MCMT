@@ -2,7 +2,7 @@ package net.himeki.mcmt.mixin;
 
 import it.unimi.dsi.fastutil.shorts.ShortSet;
 import net.minecraft.server.level.ChunkHolder;
-import net.minecraft.util.math.ChunkPos;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.HeightLimitView;
 import net.minecraft.world.chunk.light.LightingProvider;
 

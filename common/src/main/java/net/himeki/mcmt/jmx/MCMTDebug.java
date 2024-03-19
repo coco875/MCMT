@@ -1,6 +1,6 @@
 package net.himeki.mcmt.jmx;
 
-import net.minecraft.util.math.ChunkPos;
+import net.minecraft.world.level.ChunkPos;
 
 import javax.management.AttributeChangeNotification;
 import javax.management.MBeanNotificationInfo;

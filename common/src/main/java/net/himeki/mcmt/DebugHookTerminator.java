@@ -29,7 +29,7 @@ import net.minecraft.world.biome.provider.SingleBiomeProviderSettings;
 
 // TODO Should be renamed ChunkRepairHookTerminator (Note requres coremod edit)
 
-import net.minecraft.util.math.ChunkPos;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkStatus;
 

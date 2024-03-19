@@ -6,7 +6,7 @@ import net.minecraft.server.WorldGenerationProgressListener;
 import net.minecraft.server.level.ServerChunkManager;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.structure.StructureTemplateManager;
-import net.minecraft.util.math.ChunkPos;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.PersistentStateManager;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
