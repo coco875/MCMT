@@ -24,7 +24,7 @@ public abstract class LevelTicksMixin<T> implements LevelTickAccess<T> {
     @Shadow
     @Final
     @Mutable
-    private Long2ObjectMap<LevelChunkTicks<T>> chunkTickSchedulers = new Long2ObjectOpenConcurrentHashMap<>();
+    private Long2ObjectMap<LevelChunkTicks<T>> allContainers = new Long2ObjectOpenConcurrentHashMap<>();
 
 //    @Shadow
 //    @Final
@@ -33,20 +33,20 @@ public abstract class LevelTicksMixin<T> implements LevelTickAccess<T> {
     @Shadow
     @Final
     @Mutable
-    private  Long2LongMap nextTriggerTickByChunkPos = new Long2LongConcurrentHashMap(Long.MAX_VALUE);//Util.make(new Long2LongConcurrentHashMap(Long.MAX_VALUE), map -> map.defaultReturnValue(Long.MAX_VALUE));;
+    private  Long2LongMap nextTickForContainer = new Long2LongConcurrentHashMap(Long.MAX_VALUE);//Util.make(new Long2LongConcurrentHashMap(Long.MAX_VALUE), map -> map.defaultReturnValue(Long.MAX_VALUE));;
 
     @Shadow
     @Final
     @Mutable
-    private Queue<LevelChunkTicks<T>> tickableLevelChunkTickss = ConcurrentCollections.newArrayDeque();
+    private Queue<LevelChunkTicks<T>> containersToTick = ConcurrentCollections.newArrayDeque();
 
     @Shadow
     @Final
     @Mutable
-    private Queue<ScheduledTick<T>> tickableTicks = ConcurrentCollections.newArrayDeque();
+    private Queue<ScheduledTick<T>> toRunThisTick = ConcurrentCollections.newArrayDeque();
 
     @Shadow
     @Final
     @Mutable
-    private List<ScheduledTick<T>> tickedTicks = new CopyOnWriteArrayList<>();
+    private List<ScheduledTick<T>> alreadyRunThisTick = new CopyOnWriteArrayList<>();
 }

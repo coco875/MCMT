@@ -18,10 +18,10 @@ public abstract class SectionStorageMixin<R> implements AutoCloseable {
     @Shadow
     @Final
     @Mutable
-    private Long2ObjectMap<Optional<R>> loadedElements = new Long2ObjectConcurrentHashMap<>();
+    private Long2ObjectMap<Optional<R>> storage = new Long2ObjectConcurrentHashMap<>();
 
     @Shadow
     @Final
     @Mutable
-    private LongLinkedOpenHashSet unsavedElements = new ConcurrentLongLinkedOpenHashSet();
+    private LongLinkedOpenHashSet dirty = new ConcurrentLongLinkedOpenHashSet();
 }

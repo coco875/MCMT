@@ -23,15 +23,15 @@ public abstract class ChunkHolderMixin {
     @Mutable
     @Shadow
     @Final
-    private ShortSet[] blockUpdatesBySection;
+    private ShortSet[] changedBlocksPerSection;
 
-    // @Inject(method = "<init>", at = @At(value = "FIELD", target = "Lnet/minecraft/server/level/ChunkHolder;blockUpdatesBySection:[Lit/unimi/dsi/fastutil/shorts/ShortSet;", opcode = Opcodes.PUTFIELD, shift = At.Shift.AFTER))
-    @Inject(method = "<init>", at = @At(value = "TAIL", target = "Lnet/minecraft/server/level/ChunkHolder;blockUpdatesBySection:[Lit/unimi/dsi/fastutil/shorts/ShortSet;"))
+    // @Inject(method = "<init>", at = @At(value = "FIELD", target = "Lnet/minecraft/server/level/ChunkHolder;changedBlocksPerSection:[Lit/unimi/dsi/fastutil/shorts/ShortSet;", opcode = Opcodes.PUTFIELD, shift = At.Shift.AFTER))
+    @Inject(method = "<init>", at = @At(value = "TAIL", target = "Lnet/minecraft/server/level/ChunkHolder;changedBlocksPerSection:[Lit/unimi/dsi/fastutil/shorts/ShortSet;"))
     private void overwriteShortSet(ChunkPos pos, int level, LevelHeightAccessor world, LevelLightEngine lightingProvider, ChunkHolder.LevelChangeListener levelUpdateListener, ChunkHolder.PlayerProvider playersWatchingChunkProvider, CallbackInfo ci) {
-        this.blockUpdatesBySection = new ConcurrentShortHashSet[world.getSectionsCount()];
+        this.changedBlocksPerSection = new ConcurrentShortHashSet[world.getSectionsCount()];
     }
 
-    @Redirect(method = "markForBlockUpdate", at = @At(value = "FIELD", target = "Lnet/minecraft/server/level/ChunkHolder;blockUpdatesBySection:[Lit/unimi/dsi/fastutil/shorts/ShortSet;", args = "array=set"))
+    @Redirect(method = "blockChanged", at = @At(value = "FIELD", target = "Lnet/minecraft/server/level/ChunkHolder;changedBlocksPerSection:[Lit/unimi/dsi/fastutil/shorts/ShortSet;", args = "array=set"))
     private void setBlockUpdatesBySection(ShortSet[] array, int index, ShortSet value) {
         array[index] = new ConcurrentShortHashSet();
     }

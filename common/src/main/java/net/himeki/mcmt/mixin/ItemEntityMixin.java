@@ -12,12 +12,12 @@ import java.util.concurrent.locks.ReentrantLock;
 public class ItemEntityMixin {
     private static final ReentrantLock lock = new ReentrantLock();
 
-    @Inject(method="tryMerge()V",at=@At(value="HEAD"))
+    @Inject(method="mergeWithNeighbours()V",at=@At(value="HEAD"))
     private void lock(CallbackInfo ci) {
         lock.lock();
     }
 
-    @Inject(method="tryMerge()V",at=@At(value="RETURN"))
+    @Inject(method="mergeWithNeighbours()V",at=@At(value="RETURN"))
     private void unlock(CallbackInfo ci) {
         lock.unlock();
     }

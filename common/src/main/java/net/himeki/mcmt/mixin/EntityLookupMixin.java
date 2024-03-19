@@ -22,17 +22,17 @@ public abstract class EntityLookupMixin<T extends EntityAccess> {
     @Shadow
     @Final
     @Mutable
-    private Int2ObjectMap<T> idToEntity;
+    private Int2ObjectMap<T> byId;
 
     @Shadow
     @Final
     @Mutable
-    private Map<UUID, T> uuidToEntity = ConcurrentCollections.newHashMap();
+    private Map<UUID, T> byUuid = ConcurrentCollections.newHashMap();
 
     @Inject(method = "<init>",at = @At("TAIL"))
     private void replaceConVars(CallbackInfo ci)
     {
-        idToEntity = new Int2ObjectConcurrentHashMap<>();
+        byId = new Int2ObjectConcurrentHashMap<>();
     }
 
 }

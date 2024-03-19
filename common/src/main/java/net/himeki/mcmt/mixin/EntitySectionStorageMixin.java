@@ -21,6 +21,6 @@ public abstract class EntitySectionStorageMixin<T extends EntityAccess> {
     @Shadow
     @Final
     @Mutable
-    private LongSortedSet trackedPositions = new ConcurrentLongSortedSet();
+    private LongSortedSet sectionIds = new ConcurrentLongSortedSet();
 
 }

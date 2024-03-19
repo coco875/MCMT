@@ -24,5 +24,5 @@ public abstract class ChunkMapMixin extends ChunkStorage implements ChunkHolder.
     @Shadow
     @Final
     @Mutable
-    private Int2ObjectMap<ChunkMap.TrackedEntity> entityTrackers = new Int2ObjectConcurrentHashMap<>();
+    private Int2ObjectMap<ChunkMap.TrackedEntity> entityMap = new Int2ObjectConcurrentHashMap<>();
 }

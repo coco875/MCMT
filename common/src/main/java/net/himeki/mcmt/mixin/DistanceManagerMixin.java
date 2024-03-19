@@ -19,10 +19,10 @@ public abstract class DistanceManagerMixin {
     @Shadow
     @Final
     @Mutable
-    Set<ChunkHolder> chunkHolders = ConcurrentCollections.newHashSet();
+    Set<ChunkHolder> chunksToUpdateFutures = ConcurrentCollections.newHashSet();
 
     @Shadow
     @Final
     @Mutable
-    LongSet chunkPositions = new ConcurrentLongLinkedOpenHashSet();
+    LongSet ticketsToRelease = new ConcurrentLongLinkedOpenHashSet();
 }

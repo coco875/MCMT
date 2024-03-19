@@ -42,7 +42,7 @@ public abstract class LevelMixin implements LevelAccessor, AutoCloseable {
         }
     }
 
-    @Redirect(method = "tickBlockEntities", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/chunk/TickingBlockEntity;tick()V"))
+    @Redirect(method = "tickBlockEntities", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/entity/TickingBlockEntity;tick()V"))
     private void overwriteBlockEntityTick(TickingBlockEntity blockEntityTickInvoker) {
         ParallelProcessor.callBlockEntityTick(blockEntityTickInvoker, (Level) (Object) this);
     }
@@ -52,7 +52,7 @@ public abstract class LevelMixin implements LevelAccessor, AutoCloseable {
         return this.thread;
     }
 
-    @Redirect(method = "getChunk(II)Lnet/minecraft/world/chunk/LevelChunk;", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;getChunk(IILnet/minecraft/world/chunk/ChunkStatus;)Lnet/minecraft/world/chunk/Chunk;"))
+    @Redirect(method = "getChunk(II)Lnet/minecraft/world/level/chunk/LevelChunk;", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;getChunk(IILnet/minecraft/world/level/chunk/ChunkStatus;)Lnet/minecraft/world/level/chunk/ChunkAccess;"))
     private ChunkAccess getChunk(Level world, int x, int z, net.minecraft.world.level.chunk.ChunkStatus leastStatus, int i, int j) {
         ChunkAccess chunk;
         long startTime, counter = -1;

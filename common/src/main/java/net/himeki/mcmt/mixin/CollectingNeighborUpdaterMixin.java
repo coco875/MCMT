@@ -16,7 +16,7 @@ public abstract class CollectingNeighborUpdaterMixin implements NeighborUpdater 
     @Shadow
     @Final
     @Mutable
-    List<CollectingNeighborUpdater.NeighborUpdates> pending = new CopyOnWriteArrayList<>();
+    List<CollectingNeighborUpdater.NeighborUpdates> addedThisLayer = new CopyOnWriteArrayList<>();
 
 
 }

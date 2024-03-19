@@ -22,14 +22,14 @@ public abstract class ClassInstanceMultiMapMixin<T> extends AbstractCollection<T
     @Shadow
     @Final
     @Mutable
-    private Map<Class<?>, List<T>> elementsByType = new ConcurrentHashMap<>();
+    private Map<Class<?>, List<T>> byClass = new ConcurrentHashMap<>();
 
     @Shadow
     @Final
     @Mutable
-    private List<T> allElements = new CopyOnWriteArrayList<>();
+    private List<T> allInstances = new CopyOnWriteArrayList<>();
 
-    @ModifyArg(method = "method_15217", at = @At(value = "INVOKE", target = "Ljava/util/stream/Stream;collect(Ljava/util/stream/Collector;)Ljava/lang/Object;"))
+    @ModifyArg(method = "m_13537_", at = @At(value = "INVOKE", target = "Ljava/util/stream/Stream;collect(Ljava/util/stream/Collector;)Ljava/lang/Object;"))
     private <T> Collector<T, ?, List<T>> overwriteCollectToList(Collector<T, ?, List<T>> collector) {
         return ConcurrentCollections.toList();
     }
