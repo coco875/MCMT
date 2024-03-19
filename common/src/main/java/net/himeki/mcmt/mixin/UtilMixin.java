@@ -1,6 +1,6 @@
 package net.himeki.mcmt.mixin;
 
-import net.minecraft.util.Util;
+import net.minecraft.Util;
 
 import net.himeki.mcmt.ParallelProcessor;
 import org.spongepowered.asm.mixin.Mixin;

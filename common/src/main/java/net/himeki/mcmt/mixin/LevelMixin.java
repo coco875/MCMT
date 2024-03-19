@@ -2,10 +2,10 @@ package net.himeki.mcmt.mixin;
 
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccess;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.entity.TickingBlockEntity;
 import net.minecraft.world.level.chunk.ChunkAccess;
-import net.minecraft.world.level.chunk.ReadOnlyChunk;
+import net.minecraft.world.level.chunk.ImposterProtoChunk;
 
 import net.himeki.mcmt.MCMT;
 import net.himeki.mcmt.ParallelProcessor;
@@ -18,8 +18,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(World.class)
-public abstract class WorldMixin implements WorldAccess, AutoCloseable {
+@Mixin(Level.class)
+public abstract class LevelMixin implements LevelAccessor, AutoCloseable {
     @Shadow
     @Final
     @Mutable
@@ -44,7 +44,7 @@ public abstract class WorldMixin implements WorldAccess, AutoCloseable {
 
     @Redirect(method = "tickBlockEntities", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/chunk/TickingBlockEntity;tick()V"))
     private void overwriteBlockEntityTick(TickingBlockEntity blockEntityTickInvoker) {
-        ParallelProcessor.callBlockEntityTick(blockEntityTickInvoker, (World) (Object) this);
+        ParallelProcessor.callBlockEntityTick(blockEntityTickInvoker, (Level) (Object) this);
     }
 
     @Redirect(method = "getBlockEntity", at = @At(value = "INVOKE", target = "Ljava/lang/Thread;currentThread()Ljava/lang/Thread;"))
@@ -53,8 +53,8 @@ public abstract class WorldMixin implements WorldAccess, AutoCloseable {
     }
 
     @Redirect(method = "getChunk(II)Lnet/minecraft/world/chunk/LevelChunk;", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;getChunk(IILnet/minecraft/world/chunk/ChunkStatus;)Lnet/minecraft/world/chunk/Chunk;"))
-    private Chunk getChunk(World world, int x, int z, net.minecraft.world.level.chunk.ChunkStatus leastStatus, int i, int j) {
-        Chunk chunk;
+    private ChunkAccess getChunk(Level world, int x, int z, net.minecraft.world.level.chunk.ChunkStatus leastStatus, int i, int j) {
+        ChunkAccess chunk;
         long startTime, counter = -1;
         startTime = System.currentTimeMillis();
 
@@ -63,10 +63,10 @@ public abstract class WorldMixin implements WorldAccess, AutoCloseable {
             counter++;
             if (counter>0)
                 System.out.println("getChunk() retry: " + counter);
-        } while (chunk instanceof ReadOnlyChunk);
+        } while (chunk instanceof ImposterProtoChunk);
 
         if (counter > 0) {
-            MCMT.LOGGER.warn("Chunk at " + x + ", " + z + " was ReadOnlyChunk for " + counter + " times before completely loaded. Took " + (System.currentTimeMillis() - startTime) + "ms");
+            MCMT.LOGGER.warn("Chunk at " + x + ", " + z + " was ImposterProtoChunk for " + counter + " times before completely loaded. Took " + (System.currentTimeMillis() - startTime) + "ms");
         }
         return chunk;
     }

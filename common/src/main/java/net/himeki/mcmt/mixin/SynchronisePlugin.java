@@ -31,11 +31,11 @@ public class SynchronisePlugin implements IMixinConfigPlugin {
 //        mixin2MethodsMap.put("net.himeki.mcmt.mixin.ServerTickSchedulerMixin", mappingResolver.mapMethodName("intermediary", "net.minecraft.class_1949", "method_20514", "(Lnet/minecraft/class_1954;)V"));
 //        mixin2MethodsMap.put("net.himeki.mcmt.mixin.ServerTickSchedulerMixin", mappingResolver.mapMethodName("intermediary", "net.minecraft.class_1949", "method_8672", "(Lnet/minecraft/class_3341;ZZ)Ljava/util/List;"));
 //        mixin2MethodsMap.put("net.himeki.mcmt.mixin.ServerLevelMixin", mappingResolver.mapMethodName("intermediary", "net.minecraft.class_1937", "method_19282", "(Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;Lnet/minecraft/class_2680;)V"));
-//        mixin2MethodsMap.put("net.himeki.mcmt.mixin.LevelPropagatorMixin", mappingResolver.mapMethodName("intermediary", "net.minecraft.class_3554", "method_15492", "(I)I"));
-//        mixin2MethodsMap.put("net.himeki.mcmt.mixin.LevelPropagatorMixin", mappingResolver.mapMethodName("intermediary", "net.minecraft.class_3554", "method_15478", "(JJIZ)V"));
-        mixin2MethodsMap.put("net.himeki.mcmt.mixin.ChainRestrictedNeighborUpdaterMixin", "findPathToAny"); //mappingResolver.mapMethodName("intermediary", "net.minecraft.class_7159", "method_41706", "(Lnet/minecraft/class_2338;Lnet/minecraft/class_7159$class_7162;)V"));
+//        mixin2MethodsMap.put("net.himeki.mcmt.mixin.DynamicGraphMinFixedPointMixin", mappingResolver.mapMethodName("intermediary", "net.minecraft.class_3554", "method_15492", "(I)I"));
+//        mixin2MethodsMap.put("net.himeki.mcmt.mixin.DynamicGraphMinFixedPointMixin", mappingResolver.mapMethodName("intermediary", "net.minecraft.class_3554", "method_15478", "(JJIZ)V"));
+        mixin2MethodsMap.put("net.himeki.mcmt.mixin.CollectingNeighborUpdaterMixin", "findPathToAny"); //mappingResolver.mapMethodName("intermediary", "net.minecraft.class_7159", "method_41706", "(Lnet/minecraft/class_2338;Lnet/minecraft/class_7159$class_7162;)V"));
         mixin2MethodsMap.put("net.himeki.mcmt.mixin.ServerChunkCacheMixin", "putInCache"); //mappingResolver.mapMethodName("intermediary", "net.minecraft.class_3215", "method_21738", "(JLnet/minecraft/class_2791;Lnet/minecraft/class_2806;)V"));
-        mixin2MethodsMap.put("net.himeki.mcmt.mixin.PathNodeNavigatorMixin", "enqueue"); //mappingResolver.mapMethodName("intermediary", "net.minecraft.class_13", "method_52", "(Lnet/minecraft/class_1950;Lnet/minecraft/class_1308;Ljava/util/Set;FIF)Lnet/minecraft/class_11;"));
+        mixin2MethodsMap.put("net.himeki.mcmt.mixin.PathFinderMixin", "enqueue"); //mappingResolver.mapMethodName("intermediary", "net.minecraft.class_13", "method_52", "(Lnet/minecraft/class_1950;Lnet/minecraft/class_1308;Ljava/util/Set;FIF)Lnet/minecraft/class_11;"));
 //        mixin2MethodsMap.put("net.himeki.mcmt.mixin.ChunkStatusMixin", mappingResolver.mapMethodName("intermediary", "net.minecraft.class_2806", "method_20612", "(Lnet/minecraft/class_3218;Lnet/minecraft/class_3485;Lnet/minecraft/class_3227;Ljava/util/function/Function;Lnet/minecraft/class_2791;)Ljava/util/concurrent/CompletableFuture;"));
         mixin2MethodsExcludeMap.put("net.himeki.mcmt.mixin.SyncAllMixin", "isAtLeast"); //mappingResolver.mapMethodName("intermediary", "net.minecraft.class_2806", "method_12165", "(Lnet/minecraft/class_2806;)Z"));
         // mixin2MethodsExcludeMap.put("net.himeki.mcmt.mixin.SyncAllMixin", "getIndex");
@@ -43,8 +43,7 @@ public class SynchronisePlugin implements IMixinConfigPlugin {
 
         syncAllSet.add("net.himeki.mcmt.mixin.FastUtilsMixin");
         syncAllSet.add("net.himeki.mcmt.mixin.SyncAllMixin");
-        syncAllSet.add("net.himeki.mcmt.mixin.CheckedRandomMixin");   // For some reason the mapping does not cover next() so sync all for now
-        syncAllSet.add("net.himeki.mcmt.mixin.SynchronicityFixer");
+        syncAllSet.add("net.himeki.mcmt.mixin.LegacyRandomSourceMixin");   // For some reason the mapping does not cover next() so sync all for now
     }
 
     @Override

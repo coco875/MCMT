@@ -118,7 +118,7 @@ public class DebugCommand {
                     } else {
                         target = targets.get(index);
                     }
-//                    Pair<BlockPos, RegistryKey<Structure>> dst = cmdCtx.getSource().getLevel().getChunkManager().getChunkGenerator().locateStructure(cmdCtx.getSource().getLevel(), RegistryKey.of(target), srcPos, 100, false);
+//                    Pair<BlockPos, ResourceKey<Structure>> dst = cmdCtx.getSource().getLevel().getChunkManager().getChunkGenerator().locateStructure(cmdCtx.getSource().getLevel(), ResourceKey.of(target), srcPos, 100, false);
 //                    if (dst == null) {
 //                        MutableComponent message = Component.literal("Failed locating " + target.registryKey().getValue().toString() + " from " + srcPos);
 //                        cmdCtx.getSource().sendSuccess(message, true);

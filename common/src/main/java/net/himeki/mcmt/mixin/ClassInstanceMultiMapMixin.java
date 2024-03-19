@@ -1,6 +1,6 @@
 package net.himeki.mcmt.mixin;
 
-import net.minecraft.util.collection.TypeFilterableList;
+import net.minecraft.util.ClassInstanceMultiMap;
 
 import net.himeki.mcmt.parallelised.ConcurrentCollections;
 import org.spongepowered.asm.mixin.Final;
@@ -17,8 +17,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collector;
 
-@Mixin(TypeFilterableList.class)
-public abstract class TypeFilterableListMixin<T> extends AbstractCollection<T> {
+@Mixin(ClassInstanceMultiMap.class)
+public abstract class ClassInstanceMultiMapMixin<T> extends AbstractCollection<T> {
     @Shadow
     @Final
     @Mutable

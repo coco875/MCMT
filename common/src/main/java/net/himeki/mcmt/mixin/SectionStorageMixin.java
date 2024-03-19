@@ -2,7 +2,7 @@ package net.himeki.mcmt.mixin;
 
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.LongLinkedOpenHashSet;
-import net.minecraft.world.storage.SerializingRegionBasedStorage;
+import net.minecraft.world.level.chunk.storage.SectionStorage;
 
 import net.himeki.mcmt.parallelised.fastutil.ConcurrentLongLinkedOpenHashSet;
 import net.himeki.mcmt.parallelised.fastutil.Long2ObjectConcurrentHashMap;
@@ -13,8 +13,8 @@ import org.spongepowered.asm.mixin.Shadow;
 
 import java.util.Optional;
 
-@Mixin(SerializingRegionBasedStorage.class)
-public abstract class SerializingRegionBasedStorageMixin<R> implements AutoCloseable {
+@Mixin(SectionStorage.class)
+public abstract class SectionStorageMixin<R> implements AutoCloseable {
     @Shadow
     @Final
     @Mutable

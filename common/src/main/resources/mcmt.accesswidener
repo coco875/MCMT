@@ -9,9 +9,9 @@ Accessible method net/minecraft/server/level/ServerChunkCache getVisibleChunkIfP
 Accessible method net/minecraft/server/level/ServerChunkCache$MainThreadExecutor pollTask ()Z
 Accessible method net/minecraft/world/World tickBlockEntities ()V
 Accessible method net/minecraft/server/level/ChunkMap shouldTick (Lnet/minecraft/util/math/ChunkPos;)Z
-Accessible class net/minecraft/server/level/ChunkMap$EntityTracker
+Accessible class net/minecraft/server/level/ChunkMap$TrackedEntity
 Accessible class net/minecraft/server/level/ServerChunkCache$ChunkWithHolder
 Accessible class net/minecraft/server/level/ServerChunkCache$MainThreadExecutor
 Accessible class net/minecraft/world/level/chunk/LevelChunk$RebindableTickingBlockEntityWrapper
 Accessible class net/minecraft/world/level/chunk/LevelChunk$BoundTickingBlockEntity
-Accessible class net/minecraft/world/block/ChainRestrictedNeighborUpdater$Entry
+Accessible class net/minecraft/world/level/redstone/CollectingNeighborUpdater$NeighborUpdates

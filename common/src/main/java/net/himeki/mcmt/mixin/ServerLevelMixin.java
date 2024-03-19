@@ -3,15 +3,17 @@ package net.himeki.mcmt.mixin;
 import com.mojang.datafixers.DataFixer;
 import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.mob.MobEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.server.level.progress.ChunkProgressListener;
-import net.minecraft.server.level.BlockEvent;
+import net.minecraft.world.level.BlockEventData;
+import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
-import net.minecraft.world.*;
 import net.minecraft.world.level.entity.ChunkStatusUpdateListener;
+import net.minecraft.world.level.entity.EntityTickList;
 import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.storage.DimensionDataStorage;
 import net.minecraft.world.level.storage.LevelStorageSource;
 
 import net.himeki.mcmt.ParallelProcessor;
@@ -37,23 +39,23 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 @Mixin(ServerLevel.class)
-public abstract class ServerLevelMixin implements StructureWorldAccess {
+public abstract class ServerLevelMixin implements WorldGenLevel {
 
-    ConcurrentLinkedDeque<BlockEvent> syncedBlockEventCLinkedQueue = new ConcurrentLinkedDeque<BlockEvent>();
-
-    @Shadow
-    @Final
-    @Mutable
-    Set<MobEntity> loadedMobs = ConcurrentCollections.newHashSet();
+    ConcurrentLinkedDeque<BlockEventData> syncedBlockEventDataCLinkedQueue = new ConcurrentLinkedDeque<BlockEventData>();
 
     @Shadow
     @Final
     @Mutable
-    private ObjectLinkedOpenHashSet<BlockEvent> syncedBlockEventQueue = null;
+    Set<Mob> loadedMobs = ConcurrentCollections.newHashSet();
 
     @Shadow
     @Final
-    EntityList entityList;
+    @Mutable
+    private ObjectLinkedOpenHashSet<BlockEventData> syncedBlockEventDataQueue = null;
+
+    @Shadow
+    @Final
+    EntityTickList entityList;
     ServerLevel thisWorld = (ServerLevel) (Object) this;
 
     @Redirect(method = "<init>", at = @At(value = "NEW", target = "net/minecraft/server/level/ServerChunkCache"))
@@ -76,29 +78,29 @@ public abstract class ServerLevelMixin implements StructureWorldAccess {
         ParallelProcessor.callEntityTick(consumer, entity, thisWorld);
     }
 
-    @Redirect(method = "addSyncedBlockEvent", at = @At(value = "INVOKE", target = "Lit/unimi/dsi/fastutil/objects/ObjectLinkedOpenHashSet;add(Ljava/lang/Object;)Z"))
-    private boolean overwriteQueueAdd(ObjectLinkedOpenHashSet<BlockEvent> objectLinkedOpenHashSet, Object object) {
-        return syncedBlockEventCLinkedQueue.add((BlockEvent) object);
+    @Redirect(method = "addSyncedBlockEventData", at = @At(value = "INVOKE", target = "Lit/unimi/dsi/fastutil/objects/ObjectLinkedOpenHashSet;add(Ljava/lang/Object;)Z"))
+    private boolean overwriteQueueAdd(ObjectLinkedOpenHashSet<BlockEventData> objectLinkedOpenHashSet, Object object) {
+        return syncedBlockEventDataCLinkedQueue.add((BlockEventData) object);
     }
 
     @Redirect(method = "clearUpdatesInArea", at = @At(value = "INVOKE", target = "Lit/unimi/dsi/fastutil/objects/ObjectLinkedOpenHashSet;removeIf(Ljava/util/function/Predicate;)Z"))
-    private boolean overwriteQueueRemoveIf(ObjectLinkedOpenHashSet<BlockEvent> objectLinkedOpenHashSet, Predicate<BlockEvent> filter) {
-        return syncedBlockEventCLinkedQueue.removeIf(filter);
+    private boolean overwriteQueueRemoveIf(ObjectLinkedOpenHashSet<BlockEventData> objectLinkedOpenHashSet, Predicate<BlockEventData> filter) {
+        return syncedBlockEventDataCLinkedQueue.removeIf(filter);
     }
 
-    @Redirect(method = "processSyncedBlockEvents", at = @At(value = "INVOKE", target = "Lit/unimi/dsi/fastutil/objects/ObjectLinkedOpenHashSet;isEmpty()Z"))
-    private boolean overwriteEmptyCheck(ObjectLinkedOpenHashSet<BlockEvent> objectLinkedOpenHashSet) {
-        return syncedBlockEventCLinkedQueue.isEmpty();
+    @Redirect(method = "processSyncedBlockEventDatas", at = @At(value = "INVOKE", target = "Lit/unimi/dsi/fastutil/objects/ObjectLinkedOpenHashSet;isEmpty()Z"))
+    private boolean overwriteEmptyCheck(ObjectLinkedOpenHashSet<BlockEventData> objectLinkedOpenHashSet) {
+        return syncedBlockEventDataCLinkedQueue.isEmpty();
     }
 
-    @Redirect(method = "processSyncedBlockEvents", at = @At(value = "INVOKE", target = "Lit/unimi/dsi/fastutil/objects/ObjectLinkedOpenHashSet;removeFirst()Ljava/lang/Object;"))
-    private Object overwriteQueueRemoveFirst(ObjectLinkedOpenHashSet<BlockEvent> objectLinkedOpenHashSet) {
-        return syncedBlockEventCLinkedQueue.removeFirst();
+    @Redirect(method = "processSyncedBlockEventDatas", at = @At(value = "INVOKE", target = "Lit/unimi/dsi/fastutil/objects/ObjectLinkedOpenHashSet;removeFirst()Ljava/lang/Object;"))
+    private Object overwriteQueueRemoveFirst(ObjectLinkedOpenHashSet<BlockEventData> objectLinkedOpenHashSet) {
+        return syncedBlockEventDataCLinkedQueue.removeFirst();
     }
 
-    @Redirect(method = "processSyncedBlockEvents", at = @At(value = "INVOKE", target = "Lit/unimi/dsi/fastutil/objects/ObjectLinkedOpenHashSet;addAll(Ljava/util/Collection;)Z"))
-    private boolean overwriteQueueAddAll(ObjectLinkedOpenHashSet<BlockEvent> instance, Collection<? extends BlockEvent> c) {
-        return syncedBlockEventCLinkedQueue.addAll(c);
+    @Redirect(method = "processSyncedBlockEventDatas", at = @At(value = "INVOKE", target = "Lit/unimi/dsi/fastutil/objects/ObjectLinkedOpenHashSet;addAll(Ljava/util/Collection;)Z"))
+    private boolean overwriteQueueAddAll(ObjectLinkedOpenHashSet<BlockEventData> instance, Collection<? extends BlockEventData> c) {
+        return syncedBlockEventDataCLinkedQueue.addAll(c);
     }
 
     @Redirect(method = "updateListeners", at = @At(value = "FIELD", target = "Lnet/minecraft/server/level/ServerLevel;duringListenerUpdate:Z", opcode = Opcodes.PUTFIELD))

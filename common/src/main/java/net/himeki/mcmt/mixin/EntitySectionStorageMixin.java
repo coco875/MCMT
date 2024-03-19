@@ -1,8 +1,8 @@
 package net.himeki.mcmt.mixin;
 
 import it.unimi.dsi.fastutil.longs.LongSortedSet;
-import net.minecraft.world.entity.EntityLike;
-import net.minecraft.world.entity.SectionedEntityCache;
+import net.minecraft.world.level.entity.EntityAccess;
+import net.minecraft.world.level.entity.EntitySectionStorage;
 
 import net.himeki.mcmt.parallelised.fastutil.ConcurrentLongSortedSet;
 import org.spongepowered.asm.mixin.Final;
@@ -11,8 +11,8 @@ import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.Shadow;
 
 
-@Mixin(SectionedEntityCache.class)
-public abstract class SectionedEntityCacheMixin<T extends EntityLike> {
+@Mixin(EntitySectionStorage.class)
+public abstract class EntitySectionStorageMixin<T extends EntityAccess> {
 
 //    @Shadow
 //    @Final

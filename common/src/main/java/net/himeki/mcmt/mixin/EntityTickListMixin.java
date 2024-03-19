@@ -2,7 +2,7 @@ package net.himeki.mcmt.mixin;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.EntityList;
+import net.minecraft.world.level.entity.EntityTickList;
 
 import net.himeki.mcmt.parallelised.fastutil.Int2ObjectConcurrentHashMap;
 import org.spongepowered.asm.mixin.Mixin;
@@ -11,8 +11,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(EntityList.class)
-public abstract class EntityListMixin {
+@Mixin(EntityTickList.class)
+public abstract class EntityTickListMixin {
     @Shadow
     private Int2ObjectMap<Entity> entities = new Int2ObjectConcurrentHashMap<>();
 

@@ -2,10 +2,10 @@ package net.himeki.mcmt.mixin;
 
 import it.unimi.dsi.fastutil.longs.Long2ByteMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
-import net.minecraft.server.level.ChunkTicket;
-import net.minecraft.util.collection.SortedArraySet;
-import net.minecraft.world.ChunkPosDistanceLevelPropagator;
-import net.minecraft.world.SimulationDistanceLevelPropagator;
+import net.minecraft.server.level.Ticket;
+import net.minecraft.util.SortedArraySet;
+import net.minecraft.server.level.ChunkTracker;
+import net.minecraft.server.level.TickingTracker;
 
 import net.himeki.mcmt.parallelised.fastutil.Long2ByteConcurrentHashMap;
 import net.himeki.mcmt.parallelised.fastutil.Long2ObjectOpenConcurrentHashMap;
@@ -14,8 +14,8 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.Shadow;
 
-@Mixin(SimulationDistanceLevelPropagator.class)
-public abstract class SimulationDistanceLevelPropagatorMixin extends ChunkPosDistanceLevelPropagator {
+@Mixin(TickingTracker.class)
+public abstract class TickingTrackerMixin extends ChunkTracker {
     @Shadow
     @Final
     @Mutable
@@ -24,9 +24,9 @@ public abstract class SimulationDistanceLevelPropagatorMixin extends ChunkPosDis
     @Shadow
     @Final
     @Mutable
-    private Long2ObjectOpenHashMap<SortedArraySet<ChunkTicket<?>>> tickets = new Long2ObjectOpenConcurrentHashMap<>();
+    private Long2ObjectOpenHashMap<SortedArraySet<Ticket<?>>> tickets = new Long2ObjectOpenConcurrentHashMap<>();
 
-    protected SimulationDistanceLevelPropagatorMixin(int i, int j, int k) {
+    protected TickingTrackerMixin(int i, int j, int k) {
         super(i, j, k);
     }
 }

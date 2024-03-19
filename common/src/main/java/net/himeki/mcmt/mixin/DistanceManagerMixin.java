@@ -2,7 +2,7 @@ package net.himeki.mcmt.mixin;
 
 import it.unimi.dsi.fastutil.longs.LongSet;
 import net.minecraft.server.level.ChunkHolder;
-import net.minecraft.server.level.ChunkTicketManager;
+import net.minecraft.server.level.DistanceManager;
 
 import net.himeki.mcmt.parallelised.ConcurrentCollections;
 import net.himeki.mcmt.parallelised.fastutil.ConcurrentLongLinkedOpenHashSet;
@@ -13,8 +13,8 @@ import org.spongepowered.asm.mixin.Shadow;
 
 import java.util.Set;
 
-@Mixin(ChunkTicketManager.class)
-public abstract class ChunkTicketManagerMixin {
+@Mixin(DistanceManager.class)
+public abstract class DistanceManagerMixin {
 
     @Shadow
     @Final

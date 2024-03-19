@@ -12,8 +12,8 @@ import org.spongepowered.asm.mixin.Shadow;
 
 import java.util.Map;
 
-@Mixin(Chunk.class)
-public abstract class ChunkMixin {
+@Mixin(ChunkAccess.class)
+public abstract class ChunkAccessMixin {
 
     @Shadow
     @Final

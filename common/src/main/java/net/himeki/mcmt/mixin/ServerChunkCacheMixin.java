@@ -5,9 +5,9 @@ import com.mojang.datafixers.util.Either;
 import net.minecraft.server.level.ChunkHolder;
 import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.profiler.Profiler;
+import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.level.chunk.ChunkAccess;
-import net.minecraft.world.level.chunk.ChunkAccessManager;
+import net.minecraft.world.level.chunk.ChunkSource;
 import net.minecraft.world.level.chunk.ChunkStatus;
 import net.minecraft.world.level.chunk.LevelChunk;
 
@@ -28,7 +28,7 @@ import java.util.concurrent.CompletableFuture;
 
 
 @Mixin(ServerChunkCache.class)
-public abstract class ServerChunkCacheMixin extends ChunkManager {
+public abstract class ServerChunkCacheMixin extends ChunkSource {
 
     @Shadow
     @Final
@@ -54,15 +54,15 @@ public abstract class ServerChunkCacheMixin extends ChunkManager {
         return Thread.currentThread();
     }
 
-    @Redirect(method = "getChunk(IILnet/minecraft/world/chunk/ChunkStatus;Z)Lnet/minecraft/world/chunk/Chunk;", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/profiler/Profiler;visit(Ljava/lang/String;)V"))
-    private void overwriteProfilerVisit(Profiler instance, String s) {
+    @Redirect(method = "getChunk(IILnet/minecraft/world/chunk/ChunkStatus;Z)Lnet/minecraft/world/chunk/Chunk;", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/profiler/ProfilerFiller;visit(Ljava/lang/String;)V"))
+    private void overwriteProfilerFillerVisit(ProfilerFiller instance, String s) {
         if (ParallelProcessor.shouldThreadChunks())
             return;
-        else instance.visit("getChunkCacheMiss");
+        else instance.incrementCounter("getChunkCacheMiss");
     }
 
     @Inject(method = "getChunk(IILnet/minecraft/world/chunk/ChunkStatus;Z)Lnet/minecraft/world/chunk/Chunk;", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerChunkCache$MainThreadExecutor;runTasks(Ljava/util/function/BooleanSupplier;)V"), locals = LocalCapture.CAPTURE_FAILHARD)
-    private void callCompletableFutureHook(int x, int z, ChunkStatus leastStatus, boolean create, CallbackInfoReturnable<Chunk> cir, Profiler profiler, long chunkPos, CompletableFuture<Either<Chunk, ChunkHolder.ChunkLoadingFailure>> i) {
+    private void callCompletableFutureHook(int x, int z, ChunkStatus leastStatus, boolean create, CallbackInfoReturnable<ChunkAccess> cir, ProfilerFiller profiler, long chunkPos, CompletableFuture<Either<ChunkAccess, ChunkHolder.ChunkLoadingFailure>> i) {
         DebugHookTerminator.chunkLoadDrive(this.mainThreadExecutor, i::isDone, (ServerChunkCache) (Object) this, i, chunkPos);
     }
 

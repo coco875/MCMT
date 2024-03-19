@@ -1,12 +1,12 @@
 package net.himeki.mcmt.mixin;
 
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.ServerTask;
-import net.minecraft.commands.CommandOutput;
+import net.minecraft.server.TickTask;
+import net.minecraft.commands.CommandSource;
 import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.registry.RegistryKey;
-import net.minecraft.util.thread.ReentrantThreadExecutor;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.util.thread.ReentrantBlockableEventLoop;
 import net.minecraft.world.level.Level;
 
 import net.himeki.mcmt.DebugHookTerminator;
@@ -23,13 +23,13 @@ import java.util.Map;
 import java.util.function.BooleanSupplier;
 
 @Mixin(MinecraftServer.class)
-public abstract class MinecraftServerMixin extends ReentrantThreadExecutor<ServerTask> implements CommandOutput, AutoCloseable {
+public abstract class MinecraftServerMixin extends ReentrantBlockableEventLoop<TickTask> implements CommandSource, AutoCloseable {
     @Shadow
     public abstract ServerLevel getOverworld();
 
     @Shadow
     @Final
-    private Map<RegistryKey<World>, ServerLevel> worlds;
+    private Map<ResourceKey<Level>, ServerLevel> worlds;
 
     public MinecraftServerMixin(String string) {
         super(string);
@@ -60,7 +60,7 @@ public abstract class MinecraftServerMixin extends ReentrantThreadExecutor<Serve
     private int initialChunkCountBypass(ServerChunkCache instance) {
         if (DebugHookTerminator.isBypassLoadTarget())
             return 441;
-        int loaded = this.getOverworld().getChunkManager().getLoadedChunkCount();
+        int loaded = this.getOverworld().getChunkSource().getTickingGenerated();
         return Math.min(loaded, 441); // Maybe because multi loading caused overflow
     }
 

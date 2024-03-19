@@ -2,10 +2,10 @@ package net.himeki.mcmt.mixin;
 
 import it.unimi.dsi.fastutil.longs.Long2LongMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
-import net.minecraft.world.tick.ChunkTickScheduler;
-import net.minecraft.world.tick.OrderedTick;
-import net.minecraft.world.tick.QueryableTickScheduler;
-import net.minecraft.world.tick.WorldTickScheduler;
+import net.minecraft.world.ticks.LevelChunkTicks;
+import net.minecraft.world.ticks.ScheduledTick;
+import net.minecraft.world.ticks.LevelTickAccess;
+import net.minecraft.world.ticks.LevelTicks;
 
 import net.himeki.mcmt.parallelised.ConcurrentCollections;
 import net.himeki.mcmt.parallelised.fastutil.Long2LongConcurrentHashMap;
@@ -19,12 +19,12 @@ import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-@Mixin(WorldTickScheduler.class)
-public abstract class WorldTickSchedulerMixin<T> implements QueryableTickScheduler<T> {
+@Mixin(LevelTicks.class)
+public abstract class LevelTicksMixin<T> implements LevelTickAccess<T> {
     @Shadow
     @Final
     @Mutable
-    private Long2ObjectMap<ChunkTickScheduler<T>> chunkTickSchedulers = new Long2ObjectOpenConcurrentHashMap<>();
+    private Long2ObjectMap<LevelChunkTicks<T>> chunkTickSchedulers = new Long2ObjectOpenConcurrentHashMap<>();
 
 //    @Shadow
 //    @Final
@@ -38,15 +38,15 @@ public abstract class WorldTickSchedulerMixin<T> implements QueryableTickSchedul
     @Shadow
     @Final
     @Mutable
-    private Queue<ChunkTickScheduler<T>> tickableChunkTickSchedulers = ConcurrentCollections.newArrayDeque();
+    private Queue<LevelChunkTicks<T>> tickableLevelChunkTickss = ConcurrentCollections.newArrayDeque();
 
     @Shadow
     @Final
     @Mutable
-    private Queue<OrderedTick<T>> tickableTicks = ConcurrentCollections.newArrayDeque();
+    private Queue<ScheduledTick<T>> tickableTicks = ConcurrentCollections.newArrayDeque();
 
     @Shadow
     @Final
     @Mutable
-    private List<OrderedTick<T>> tickedTicks = new CopyOnWriteArrayList<>();
+    private List<ScheduledTick<T>> tickedTicks = new CopyOnWriteArrayList<>();
 }

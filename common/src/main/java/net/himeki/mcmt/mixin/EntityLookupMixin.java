@@ -1,8 +1,8 @@
 package net.himeki.mcmt.mixin;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import net.minecraft.world.entity.EntityIndex;
-import net.minecraft.world.entity.EntityLike;
+import net.minecraft.world.level.entity.EntityLookup;
+import net.minecraft.world.level.entity.EntityAccess;
 
 import net.himeki.mcmt.parallelised.ConcurrentCollections;
 import net.himeki.mcmt.parallelised.fastutil.Int2ObjectConcurrentHashMap;
@@ -17,8 +17,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.Map;
 import java.util.UUID;
 
-@Mixin(EntityIndex.class)
-public abstract class EntityIndexMixin<T extends EntityLike> {
+@Mixin(EntityLookup.class)
+public abstract class EntityLookupMixin<T extends EntityAccess> {
     @Shadow
     @Final
     @Mutable
