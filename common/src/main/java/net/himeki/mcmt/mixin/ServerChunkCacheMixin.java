@@ -32,38 +32,38 @@ public abstract class ServerChunkCacheMixin extends ChunkSource {
 
     @Shadow
     @Final
-    public ServerChunkCache.MainThreadExecutor mainThreadExecutor;
+    public ServerChunkCache.MainThreadExecutor mainThreadProcessor;
 
     @Shadow
     @Final
-    ServerLevel world;
+    ServerLevel level;
 
     @Inject(method = "tickChunks", at = @At(value = "INVOKE", target = "Ljava/util/Collections;shuffle(Ljava/util/List;)V"))
     private void preChunkTick(CallbackInfo ci) {
-        ParallelProcessor.preChunkTick(this.world);
+        ParallelProcessor.preChunkTick(this.level);
     }
 
-    @Redirect(method = "tickChunks", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;tickChunk(Lnet/minecraft/world/chunk/LevelChunk;I)V"))
+    @Redirect(method = "tickChunks", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;tickChunk(Lnet/minecraft/world/level/chunk/LevelChunk;I)V"))
     private void overwriteTickChunk(ServerLevel serverWorld, LevelChunk chunk, int randomTickSpeed) {
         ParallelProcessor.callTickChunks(serverWorld, chunk, randomTickSpeed);
     }
 
 
-    @Redirect(method = {"getChunk(IILnet/minecraft/world/chunk/ChunkStatus;Z)Lnet/minecraft/world/chunk/Chunk;", "getLevelChunk"}, at = @At(value = "FIELD", target = "Lnet/minecraft/server/level/ServerChunkCache;serverThread:Ljava/lang/Thread;", opcode = Opcodes.GETFIELD))
+    @Redirect(method = {"getChunk(IILnet/minecraft/world/level/chunk/ChunkStatus;Z)Lnet/minecraft/world/level/chunk/ChunkAccess;", "getChunkNow"}, at = @At(value = "FIELD", target = "Lnet/minecraft/server/level/ServerChunkCache;mainThread:Ljava/lang/Thread;", opcode = Opcodes.GETFIELD))
     private Thread overwriteServerThread(ServerChunkCache mgr) {
         return Thread.currentThread();
     }
 
-    @Redirect(method = "getChunk(IILnet/minecraft/world/chunk/ChunkStatus;Z)Lnet/minecraft/world/chunk/Chunk;", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/profiler/ProfilerFiller;visit(Ljava/lang/String;)V"))
+    @Redirect(method = "getChunk(IILnet/minecraft/world/level/chunk/ChunkStatus;Z)Lnet/minecraft/world/level/chunk/ChunkAccess;", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/profiling/ProfilerFiller;incrementCounter(Ljava/lang/String;)V"))
     private void overwriteProfilerFillerVisit(ProfilerFiller instance, String s) {
         if (ParallelProcessor.shouldThreadChunks())
             return;
         else instance.incrementCounter("getChunkCacheMiss");
     }
 
-    @Inject(method = "getChunk(IILnet/minecraft/world/chunk/ChunkStatus;Z)Lnet/minecraft/world/chunk/Chunk;", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerChunkCache$MainThreadExecutor;runTasks(Ljava/util/function/BooleanSupplier;)V"), locals = LocalCapture.CAPTURE_FAILHARD)
+    @Inject(method = "getChunk(IILnet/minecraft/world/level/chunk/ChunkStatus;Z)Lnet/minecraft/world/level/chunk/ChunkAccess;", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerChunkCache$MainThreadExecutor;managedBlock(Ljava/util/function/BooleanSupplier;)V"), locals = LocalCapture.CAPTURE_FAILHARD)
     private void callCompletableFutureHook(int x, int z, ChunkStatus leastStatus, boolean create, CallbackInfoReturnable<ChunkAccess> cir, ProfilerFiller profiler, long chunkPos, CompletableFuture<Either<ChunkAccess, ChunkHolder.ChunkLoadingFailure>> i) {
-        DebugHookTerminator.chunkLoadDrive(this.mainThreadExecutor, i::isDone, (ServerChunkCache) (Object) this, i, chunkPos);
+        DebugHookTerminator.chunkLoadDrive(this.mainThreadProcessor, i::isDone, (ServerChunkCache) (Object) this, i, chunkPos);
     }
 
 }

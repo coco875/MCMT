@@ -34,7 +34,7 @@ public abstract class LevelMixin implements LevelAccessor, AutoCloseable {
         }
     }
 
-    @Inject(method = "tickBlockEntities", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/profiler/Profiler;pop()V"))
+    @Inject(method = "tickBlockEntities", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/profiling/ProfilerFiller;pop()V"))
     private void postBlockEntityTick(CallbackInfo ci) {
         if ((Object) this instanceof ServerLevel) {
             ServerLevel thisWorld = (ServerLevel) (Object) this;

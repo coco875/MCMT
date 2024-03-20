@@ -14,5 +14,5 @@ public abstract class ThreadingDetectorMixin<T> {
     @Shadow
     @Final
     @Mutable
-    private Semaphore semaphore = new Semaphore(255);
+    private Semaphore lock = new Semaphore(255);
 }

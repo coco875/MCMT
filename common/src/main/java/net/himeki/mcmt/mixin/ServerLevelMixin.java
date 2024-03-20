@@ -46,16 +46,16 @@ public abstract class ServerLevelMixin implements WorldGenLevel {
     @Shadow
     @Final
     @Mutable
-    Set<Mob> loadedMobs = ConcurrentCollections.newHashSet();
+    Set<Mob> navigatingMobs = ConcurrentCollections.newHashSet();
 
     @Shadow
     @Final
     @Mutable
-    private ObjectLinkedOpenHashSet<BlockEventData> syncedBlockEventDataQueue = null;
+    private ObjectLinkedOpenHashSet<BlockEventData> blockEvents = null;
 
     @Shadow
     @Final
-    EntityTickList entityList;
+    EntityTickList entityTickList;
     ServerLevel thisWorld = (ServerLevel) (Object) this;
 
     @Redirect(method = "<init>", at = @At(value = "NEW", target = "net/minecraft/server/level/ServerChunkCache"))
@@ -63,47 +63,48 @@ public abstract class ServerLevelMixin implements WorldGenLevel {
         return new ParaServerChunkProvider(world, session, dataFixer, structureTemplateManager, workerExecutor, chunkGenerator, viewDistance, simulationDistance, dsync, worldGenerationProgressListener, chunkStatusChangeListener, persistentStateManagerFactory);
     }
 
-    @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/profiler/Profiler;swap(Ljava/lang/String;)V", ordinal = 5))
+    @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/profiling/ProfilerFiller;popPush(Ljava/lang/String;)V", ordinal = 5))
     private void postChunkTick(BooleanSupplier shouldKeepTicking, CallbackInfo ci) {
         ParallelProcessor.postChunkTick(thisWorld);
     }
 
-    @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/profiler/Profiler;push(Ljava/lang/String;)V", ordinal = 2))
+    @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/profiling/ProfilerFiller;push(Ljava/lang/String;)V", ordinal = 2))
     private void preEntityTick(BooleanSupplier shouldKeepTicking, CallbackInfo ci) {
         ParallelProcessor.preEntityTick(thisWorld);
     }
 
-    @Redirect(method = "method_31420", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;tickEntity(Ljava/util/function/Consumer;Lnet/minecraft/entity/Entity;)V"))
+    // lambda$tick$3
+    @Redirect(method = "m_184063_", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;guardEntityTick(Ljava/util/function/Consumer;Lnet/minecraft/world/entity/Entity;)V"))
     private void overwriteEntityTicking(ServerLevel instance, Consumer<Entity> consumer, Entity entity) {
         ParallelProcessor.callEntityTick(consumer, entity, thisWorld);
     }
 
-    @Redirect(method = "addSyncedBlockEventData", at = @At(value = "INVOKE", target = "Lit/unimi/dsi/fastutil/objects/ObjectLinkedOpenHashSet;add(Ljava/lang/Object;)Z"))
+    @Redirect(method = "blockEvent", at = @At(value = "INVOKE", target = "Lit/unimi/dsi/fastutil/objects/ObjectLinkedOpenHashSet;add(Ljava/lang/Object;)Z"))
     private boolean overwriteQueueAdd(ObjectLinkedOpenHashSet<BlockEventData> objectLinkedOpenHashSet, Object object) {
         return syncedBlockEventDataCLinkedQueue.add((BlockEventData) object);
     }
 
-    @Redirect(method = "clearUpdatesInArea", at = @At(value = "INVOKE", target = "Lit/unimi/dsi/fastutil/objects/ObjectLinkedOpenHashSet;removeIf(Ljava/util/function/Predicate;)Z"))
+    @Redirect(method = "clearBlockEvents", at = @At(value = "INVOKE", target = "Lit/unimi/dsi/fastutil/objects/ObjectLinkedOpenHashSet;removeIf(Ljava/util/function/Predicate;)Z"))
     private boolean overwriteQueueRemoveIf(ObjectLinkedOpenHashSet<BlockEventData> objectLinkedOpenHashSet, Predicate<BlockEventData> filter) {
         return syncedBlockEventDataCLinkedQueue.removeIf(filter);
     }
 
-    @Redirect(method = "processSyncedBlockEventDatas", at = @At(value = "INVOKE", target = "Lit/unimi/dsi/fastutil/objects/ObjectLinkedOpenHashSet;isEmpty()Z"))
+    @Redirect(method = "runBlockEvents", at = @At(value = "INVOKE", target = "Lit/unimi/dsi/fastutil/objects/ObjectLinkedOpenHashSet;isEmpty()Z"))
     private boolean overwriteEmptyCheck(ObjectLinkedOpenHashSet<BlockEventData> objectLinkedOpenHashSet) {
         return syncedBlockEventDataCLinkedQueue.isEmpty();
     }
 
-    @Redirect(method = "processSyncedBlockEventDatas", at = @At(value = "INVOKE", target = "Lit/unimi/dsi/fastutil/objects/ObjectLinkedOpenHashSet;removeFirst()Ljava/lang/Object;"))
+    @Redirect(method = "runBlockEvents", at = @At(value = "INVOKE", target = "Lit/unimi/dsi/fastutil/objects/ObjectLinkedOpenHashSet;removeFirst()Ljava/lang/Object;"))
     private Object overwriteQueueRemoveFirst(ObjectLinkedOpenHashSet<BlockEventData> objectLinkedOpenHashSet) {
         return syncedBlockEventDataCLinkedQueue.removeFirst();
     }
 
-    @Redirect(method = "processSyncedBlockEventDatas", at = @At(value = "INVOKE", target = "Lit/unimi/dsi/fastutil/objects/ObjectLinkedOpenHashSet;addAll(Ljava/util/Collection;)Z"))
+    @Redirect(method = "runBlockEvents", at = @At(value = "INVOKE", target = "Lit/unimi/dsi/fastutil/objects/ObjectLinkedOpenHashSet;addAll(Ljava/util/Collection;)Z"))
     private boolean overwriteQueueAddAll(ObjectLinkedOpenHashSet<BlockEventData> instance, Collection<? extends BlockEventData> c) {
         return syncedBlockEventDataCLinkedQueue.addAll(c);
     }
 
-    @Redirect(method = "updateListeners", at = @At(value = "FIELD", target = "Lnet/minecraft/server/level/ServerLevel;duringListenerUpdate:Z", opcode = Opcodes.PUTFIELD))
+    @Redirect(method = "sendBlockUpdated", at = @At(value = "FIELD", target = "Lnet/minecraft/server/level/ServerLevel;isUpdatingNavigations:Z", opcode = Opcodes.PUTFIELD))
     private void skipSendBlockUpdatedCheck(ServerLevel instance, boolean value) {
 
     }
