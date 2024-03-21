@@ -1,12 +1,5 @@
 package net.himeki.mcmt.mixin;
 
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.entity.TickingBlockEntity;
-import net.minecraft.world.level.chunk.ChunkAccess;
-import net.minecraft.world.level.chunk.ImposterProtoChunk;
-
 import net.himeki.mcmt.MCMT;
 import net.himeki.mcmt.ParallelProcessor;
 import org.spongepowered.asm.mixin.Final;
@@ -18,17 +11,31 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.entity.TickingBlockEntity;
+import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraft.world.level.chunk.ChunkStatus;
+import net.minecraft.world.level.chunk.ImposterProtoChunk;
+
 @Mixin(Level.class)
 public abstract class LevelMixin implements LevelAccessor, AutoCloseable {
+	
+	@SuppressWarnings("deprecation")
+	@Shadow
+	public RandomSource random = RandomSource.createThreadSafe();
+	
     @Shadow
     @Final
     @Mutable
     private Thread thread;
-
+    
     @Inject(method = "tickBlockEntities", at = @At(value = "INVOKE", target = "Ljava/util/List;iterator()Ljava/util/Iterator;"))
     private void postEntityPreBlockEntityTick(CallbackInfo ci) {
         if ((Object) this instanceof ServerLevel) {
-            ServerLevel thisWorld = (ServerLevel) (Object) this;
+        	ServerLevel thisWorld = (ServerLevel) (Object) this;
             ParallelProcessor.postEntityTick(thisWorld);
             ParallelProcessor.preBlockEntityTick(thisWorld);
         }
@@ -37,24 +44,24 @@ public abstract class LevelMixin implements LevelAccessor, AutoCloseable {
     @Inject(method = "tickBlockEntities", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/profiling/ProfilerFiller;pop()V"))
     private void postBlockEntityTick(CallbackInfo ci) {
         if ((Object) this instanceof ServerLevel) {
-            ServerLevel thisWorld = (ServerLevel) (Object) this;
-            ParallelProcessor.postBlockEntityTick(thisWorld);
+        	ServerLevel thisWorld = (ServerLevel) (Object) this;
+        	ParallelProcessor.postBlockEntityTick(thisWorld);
         }
     }
-
+    
     @Redirect(method = "tickBlockEntities", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/entity/TickingBlockEntity;tick()V"))
     private void overwriteBlockEntityTick(TickingBlockEntity blockEntityTickInvoker) {
-        ParallelProcessor.callBlockEntityTick(blockEntityTickInvoker, (Level) (Object) this);
+    	ParallelProcessor.callBlockEntityTick(blockEntityTickInvoker, (Level) (Object) this);
     }
-
+    
     @Redirect(method = "getBlockEntity", at = @At(value = "INVOKE", target = "Ljava/lang/Thread;currentThread()Ljava/lang/Thread;"))
     private Thread overwriteCurrentThread() {
         return this.thread;
     }
 
     @Redirect(method = "getChunk(II)Lnet/minecraft/world/level/chunk/LevelChunk;", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;getChunk(IILnet/minecraft/world/level/chunk/ChunkStatus;)Lnet/minecraft/world/level/chunk/ChunkAccess;"))
-    private ChunkAccess getChunk(Level world, int x, int z, net.minecraft.world.level.chunk.ChunkStatus leastStatus, int i, int j) {
-        ChunkAccess chunk;
+    private ChunkAccess getChunk(Level world, int x, int z, ChunkStatus leastStatus, int i, int j) {
+    	ChunkAccess chunk;
         long startTime, counter = -1;
         startTime = System.currentTimeMillis();
 
@@ -66,9 +73,8 @@ public abstract class LevelMixin implements LevelAccessor, AutoCloseable {
         } while (chunk instanceof ImposterProtoChunk);
 
         if (counter > 0) {
-            MCMT.LOGGER.warn("Chunk at " + x + ", " + z + " was ImposterProtoChunk for " + counter + " times before completely loaded. Took " + (System.currentTimeMillis() - startTime) + "ms");
+            MCMT.LOGGER.warn("Chunk at " + x + ", " + z + " was ReadOnlyChunk for " + counter + " times before completely loaded. Took " + (System.currentTimeMillis() - startTime) + "ms");
         }
         return chunk;
     }
-
 }

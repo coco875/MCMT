@@ -1,13 +1,6 @@
 package net.himeki.mcmt.mixin;
 
-import it.unimi.dsi.fastutil.shorts.ShortSet;
-import net.minecraft.server.level.ChunkHolder;
-import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.LevelHeightAccessor;
-import net.minecraft.world.level.lighting.LevelLightEngine;
-
 import net.himeki.mcmt.parallelised.fastutil.ConcurrentShortHashSet;
-import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
@@ -17,6 +10,12 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import it.unimi.dsi.fastutil.shorts.ShortSet;
+import net.minecraft.server.level.ChunkHolder;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.LevelHeightAccessor;
+import net.minecraft.world.level.lighting.LevelLightEngine;
+
 @Mixin(ChunkHolder.class)
 public abstract class ChunkHolderMixin {
 
@@ -25,7 +24,6 @@ public abstract class ChunkHolderMixin {
     @Final
     private ShortSet[] changedBlocksPerSection;
 
-    // @Inject(method = "<init>", at = @At(value = "FIELD", target = "Lnet/minecraft/server/level/ChunkHolder;changedBlocksPerSection:[Lit/unimi/dsi/fastutil/shorts/ShortSet;", opcode = Opcodes.PUTFIELD, shift = At.Shift.AFTER))
     @Inject(method = "<init>", at = @At(value = "TAIL", target = "Lnet/minecraft/server/level/ChunkHolder;changedBlocksPerSection:[Lit/unimi/dsi/fastutil/shorts/ShortSet;"))
     private void overwriteShortSet(ChunkPos pos, int level, LevelHeightAccessor world, LevelLightEngine lightingProvider, ChunkHolder.LevelChangeListener levelUpdateListener, ChunkHolder.PlayerProvider playersWatchingChunkProvider, CallbackInfo ci) {
         this.changedBlocksPerSection = new ConcurrentShortHashSet[world.getSectionsCount()];

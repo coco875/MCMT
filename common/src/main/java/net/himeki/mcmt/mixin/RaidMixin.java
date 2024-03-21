@@ -8,15 +8,14 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.Shadow;
 
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraft.world.entity.raid.Raid;
+import net.minecraft.world.entity.raid.Raider;
 
-@Mixin(ChunkAccess.class)
-public class ChunkAccessMixin {
-	
+@Mixin(Raid.class)
+public class RaidMixin {
+
+    @Mutable
     @Shadow
     @Final
-    @Mutable
-    private Map<BlockPos, BlockEntity> blockEntities =  ConcurrentCollections.newHashMap();
+    Map<Integer, Raider> groupToLeaderMap = ConcurrentCollections.newHashMap();
 }
