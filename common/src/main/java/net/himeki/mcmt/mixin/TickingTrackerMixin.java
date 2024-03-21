@@ -19,7 +19,7 @@ public abstract class TickingTrackerMixin extends ChunkTracker {
     @Shadow
     @Final
     @Mutable
-    protected Long2ByteMap levels = new Long2ByteConcurrentHashMap();
+    protected Long2ByteMap chunks = new Long2ByteConcurrentHashMap();
 
     @Shadow
     @Final

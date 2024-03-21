@@ -74,7 +74,8 @@ public abstract class ServerLevelMixin implements WorldGenLevel {
     }
 
     // lambda$tick$3
-    @Redirect(method = "m_184063_", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;guardEntityTick(Ljava/util/function/Consumer;Lnet/minecraft/world/entity/Entity;)V"))
+    // m_184063_
+    @Redirect(method = "method_31420", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;guardEntityTick(Ljava/util/function/Consumer;Lnet/minecraft/world/entity/Entity;)V", remap = false))
     private void overwriteEntityTicking(ServerLevel instance, Consumer<Entity> consumer, Entity entity) {
         ParallelProcessor.callEntityTick(consumer, entity, thisWorld);
     }

@@ -20,10 +20,10 @@ public abstract class DynamicGraphMinFixedPointMixin {
     @Final
     @Shadow
     @Mutable
-    Long2ByteMap pendingUpdates;
+    Long2ByteMap computedLevels;
 
 
-    @Redirect(method = "<init>", at = @At(value = "FIELD", target = "Lnet/minecraft/world/level/lighting/DynamicGraphMinFixedPoint;pendingIpendingIdUpdatesByLeveldUpdatesByLevel:[Lit/unimi/dsi/fastutil/longs/LongLinkedOpenHashSet;", args = "array=set"))
+    @Redirect(method = "<init>", at = @At(value = "FIELD", target = "Lnet/minecraft/world/level/lighting/DynamicGraphMinFixedPoint;queues:[Lit/unimi/dsi/fastutil/longs/LongLinkedOpenHashSet;", args = "array=set"))
     private void overwritePendingIdUpdatesByLevel(LongLinkedOpenHashSet[] hashSets, int index, LongLinkedOpenHashSet hashSet, int levelCount, final int expectedLevelSize, final int expectedTotalSize) {
         hashSets[index] = new ConcurrentLongLinkedOpenHashSet(expectedLevelSize, 0.5f) {
             @Override
@@ -36,8 +36,8 @@ public abstract class DynamicGraphMinFixedPointMixin {
     }
 
 
-    @Redirect(method = "<init>", at = @At(value = "FIELD", target = "Lnet/minecraft/world/chunk/light/DynamicGraphMinFixedPoint;computedLevels:Lit/unimi/dsi/fastutil/longs/Long2ByteMap;", opcode = Opcodes.PUTFIELD))
+    @Redirect(method = "<init>", at = @At(value = "FIELD", target = "Lnet/minecraft/world/level/lighting/DynamicGraphMinFixedPoint;computedLevels:Lit/unimi/dsi/fastutil/longs/Long2ByteMap;", opcode = Opcodes.PUTFIELD))
     private void overwritePendingUpdates(DynamicGraphMinFixedPoint instance, Long2ByteMap value, int levelCount, final int expectedLevelSize, final int expectedTotalSize) {
-        pendingUpdates = new Long2ByteConcurrentHashMap(expectedTotalSize, 0.5f);
+        computedLevels = new Long2ByteConcurrentHashMap(expectedTotalSize, 0.5f);
     }
 }

@@ -41,7 +41,7 @@ public abstract class MinecraftServerMixin extends ReentrantBlockableEventLoop<T
         ParallelProcessor.preTick(this.levels.size(), (MinecraftServer) (Object) this);
     }
 
-    @Inject(method = "tickChildren", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/profiler/Profiler;swap(Ljava/lang/String;)V", ordinal = 1))
+    @Inject(method = "tickChildren", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/profiling/ProfilerFiller;popPush(Ljava/lang/String;)V", ordinal = 1))
     private void postTick(BooleanSupplier shouldKeepTicking, CallbackInfo ci) {
         ParallelProcessor.postTick((MinecraftServer) (Object) this);
     }

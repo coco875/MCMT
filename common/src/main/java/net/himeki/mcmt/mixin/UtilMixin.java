@@ -16,7 +16,8 @@ import java.util.concurrent.ForkJoinWorkerThread;
 public abstract class UtilMixin {
 
     // lambda$makeExecutor$3
-    @Inject(method = "m_201861_", at = @At(value = "INVOKE", target = "Ljava/util/concurrent/ForkJoinWorkerThread;setName(Ljava/lang/String;)V"), locals = LocalCapture.CAPTURE_FAILHARD)
+    // m_201861_
+    @Inject(method = "method_28123", at = @At(value = "INVOKE", target = "Ljava/util/concurrent/ForkJoinWorkerThread;setName(Ljava/lang/String;)V"), locals = LocalCapture.CAPTURE_FAILHARD)
     private static void registerThread(String string, ForkJoinPool forkJoinPool, CallbackInfoReturnable<ForkJoinWorkerThread> cir, ForkJoinWorkerThread forkJoinWorkerThread) {
         ParallelProcessor.regThread(string, forkJoinWorkerThread);
     }
