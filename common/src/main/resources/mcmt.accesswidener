@@ -1,4 +1,4 @@
-accessWidener	v1	named
+accessWidener    v1    named
 Accessible field net/minecraft/server/level/ServerChunkCache mainThreadProcessor Lnet/minecraft/server/level/ServerChunkCache$MainThreadExecutor;
 Accessible field net/minecraft/server/level/ChunkMap poiManager Lnet/minecraft/world/entity/ai/village/poi/PoiManager;
 Accessible field net/minecraft/server/level/ChunkMap structureTemplateManager Lnet/minecraft/world/level/levelgen/structure/templatesystem/StructureTemplateManager;

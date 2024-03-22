@@ -28,13 +28,13 @@ import net.minecraft.world.level.chunk.LevelChunk;
 
 @Mixin(ServerChunkCache.class)
 public abstract class ServerChunkCacheMixin extends ChunkSource {
-	@Shadow
-	@Final
-	ServerChunkCache.MainThreadExecutor mainThreadProcessor;
-	   
-	@Shadow
-	@Final ServerLevel level;
-	
+    @Shadow
+    @Final
+    ServerChunkCache.MainThreadExecutor mainThreadProcessor;
+       
+    @Shadow
+    @Final ServerLevel level;
+    
     @Inject(method = "tickChunks", at = @At(value = "INVOKE", target = "Ljava/util/Collections;shuffle(Ljava/util/List;)V"))
     private void preChunkTick(CallbackInfo ci) {
         ParallelProcessor.preChunkTick(this.level);
@@ -42,7 +42,7 @@ public abstract class ServerChunkCacheMixin extends ChunkSource {
     
     @Redirect(method = "tickChunks", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;tickChunk(Lnet/minecraft/world/level/chunk/LevelChunk;I)V"))
     private void overwriteTickChunk(ServerLevel serverWorld, LevelChunk chunk, int randomTickSpeed) {
-    	ParallelProcessor.callTickChunks(serverWorld, chunk, randomTickSpeed);
+        ParallelProcessor.callTickChunks(serverWorld, chunk, randomTickSpeed);
     }
     
     @Redirect(method = {"getChunk(IILnet/minecraft/world/level/chunk/ChunkStatus;Z)Lnet/minecraft/world/level/chunk/ChunkAccess;", "getChunkNow"}, at = @At(value = "FIELD", target = "Lnet/minecraft/server/level/ServerChunkCache;mainThread:Ljava/lang/Thread;", opcode = Opcodes.GETFIELD))

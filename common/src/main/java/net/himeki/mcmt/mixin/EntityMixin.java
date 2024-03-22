@@ -9,7 +9,7 @@ import net.minecraft.world.entity.Entity;
 @Mixin(Entity.class)
 public class EntityMixin {
 
-	@SuppressWarnings("deprecation")
-	@Shadow
-	public RandomSource random = RandomSource.createThreadSafe();
+    @SuppressWarnings("deprecation")
+    @Shadow
+    public RandomSource random = RandomSource.createThreadSafe();
 }

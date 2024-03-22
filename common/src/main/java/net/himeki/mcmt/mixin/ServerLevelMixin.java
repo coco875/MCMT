@@ -52,14 +52,14 @@ public abstract class ServerLevelMixin implements WorldGenLevel {
     @Final
     @Mutable
     private ObjectLinkedOpenHashSet<BlockEventData> blockEvents = null;
-	
-	ServerLevel thisWorld = (ServerLevel) (Object) this;
-	
-	@Redirect(method = "<init>", at = @At(value = "NEW", target = "(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/level/storage/LevelStorageSource$LevelStorageAccess;Lcom/mojang/datafixers/DataFixer;Lnet/minecraft/world/level/levelgen/structure/templatesystem/StructureTemplateManager;Ljava/util/concurrent/Executor;Lnet/minecraft/world/level/chunk/ChunkGenerator;IIZLnet/minecraft/server/level/progress/ChunkProgressListener;Lnet/minecraft/world/level/entity/ChunkStatusUpdateListener;Ljava/util/function/Supplier;)Lnet/minecraft/server/level/ServerChunkCache;"))
+    
+    ServerLevel thisWorld = (ServerLevel) (Object) this;
+    
+    @Redirect(method = "<init>", at = @At(value = "NEW", target = "(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/level/storage/LevelStorageSource$LevelStorageAccess;Lcom/mojang/datafixers/DataFixer;Lnet/minecraft/world/level/levelgen/structure/templatesystem/StructureTemplateManager;Ljava/util/concurrent/Executor;Lnet/minecraft/world/level/chunk/ChunkGenerator;IIZLnet/minecraft/server/level/progress/ChunkProgressListener;Lnet/minecraft/world/level/entity/ChunkStatusUpdateListener;Ljava/util/function/Supplier;)Lnet/minecraft/server/level/ServerChunkCache;"))
     private ServerChunkCache overwriteServerChunkManager(ServerLevel world, LevelStorageSource.LevelStorageAccess session, DataFixer dataFixer, StructureTemplateManager structureTemplateManager, Executor workerExecutor, ChunkGenerator chunkGenerator, int viewDistance, int simulationDistance, boolean dsync, ChunkProgressListener worldGenerationProgressListener, ChunkStatusUpdateListener chunkStatusChangeListener, Supplier<DimensionDataStorage> persistentStateManagerFactory) {
         return new ParaServerChunkProvider(world, session, dataFixer, structureTemplateManager, workerExecutor, chunkGenerator, viewDistance, simulationDistance, dsync, worldGenerationProgressListener, chunkStatusChangeListener, persistentStateManagerFactory);
     }
-	
+    
     @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/profiling/ProfilerFiller;popPush(Ljava/lang/String;)V", ordinal = 5))
     private void postChunkTick(BooleanSupplier shouldKeepTicking, CallbackInfo ci) {
         ParallelProcessor.postChunkTick(thisWorld);
@@ -67,14 +67,14 @@ public abstract class ServerLevelMixin implements WorldGenLevel {
 
     @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/profiling/ProfilerFiller;push(Ljava/lang/String;)V", ordinal = 2))
     private void preEntityTick(BooleanSupplier shouldKeepTicking, CallbackInfo ci) {
-    	ParallelProcessor.preEntityTick(thisWorld);
+        ParallelProcessor.preEntityTick(thisWorld);
     }
     
     //m_184063_
     //lambda$tick$3
     @Redirect(method = "method_31420", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;guardEntityTick(Ljava/util/function/Consumer;Lnet/minecraft/world/entity/Entity;)V"))
     private void overwriteEntityTicking(ServerLevel instance, Consumer<Entity> consumer, Entity entity) {
-    	ParallelProcessor.callEntityTick(consumer, entity, thisWorld);
+        ParallelProcessor.callEntityTick(consumer, entity, thisWorld);
     }
     
     @Redirect(method = "blockEvent", at = @At(value = "INVOKE", target = "Lit/unimi/dsi/fastutil/objects/ObjectLinkedOpenHashSet;add(Ljava/lang/Object;)Z"))

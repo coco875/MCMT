@@ -131,15 +131,15 @@ public class DebugCommand {
                     return 1;
                 })));
         /* */
-				/*
-				.then(literal("goinf").requires(cmdSrc -> {
-					return cmdSrc.hasPermission(2);
-				}).executes(cmdCtx -> {
-					ServerPlayer p = cmdCtx.getSource().asPlayer();
-					p.setPosition(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
-					return 1;
-				}))
-				*/
+                /*
+                .then(literal("goinf").requires(cmdSrc -> {
+                    return cmdSrc.hasPermission(2);
+                }).executes(cmdCtx -> {
+                    ServerPlayer p = cmdCtx.getSource().asPlayer();
+                    p.setPosition(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
+                    return 1;
+                }))
+                */
     }
 
     private static Map<String, AtomicInteger> structureIdx = new ConcurrentHashMap<>();

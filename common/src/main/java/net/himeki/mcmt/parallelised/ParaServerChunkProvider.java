@@ -74,16 +74,16 @@ public class ParaServerChunkProvider extends ServerChunkCache {
 
     /* */
 
-	/* 1.15.2 code; AKA the only thing that changed
-	public ParaServerChunkProvider(ServerLevel worldIn, File worldDirectory, DataFixer dataFixer,
-			TemplateManager templateManagerIn, Executor executorIn, ChunkGenerator<?> chunkGeneratorIn,
-			int viewDistance, IChunkStatusListener p_i51537_8_, Supplier<DimensionSavedDataManager> p_i51537_9_) {
-		super(worldIn, worldDirectory, dataFixer, templateManagerIn, executorIn, chunkGeneratorIn, viewDistance, p_i51537_8_,
-				p_i51537_9_);
-		cacheThread = new Thread(this::chunkCacheCleanup, "Chunk Cache Cleaner " + worldIn.dimension.getType().getId());
-		cacheThread.start();
-	}
-	/* */
+    /* 1.15.2 code; AKA the only thing that changed
+    public ParaServerChunkProvider(ServerLevel worldIn, File worldDirectory, DataFixer dataFixer,
+            TemplateManager templateManagerIn, Executor executorIn, ChunkGenerator<?> chunkGeneratorIn,
+            int viewDistance, IChunkStatusListener p_i51537_8_, Supplier<DimensionSavedDataManager> p_i51537_9_) {
+        super(worldIn, worldDirectory, dataFixer, templateManagerIn, executorIn, chunkGeneratorIn, viewDistance, p_i51537_8_,
+                p_i51537_9_);
+        cacheThread = new Thread(this::chunkCacheCleanup, "Chunk Cache Cleaner " + worldIn.dimension.getType().getId());
+        cacheThread.start();
+    }
+    /* */
 
     @Override
     @Nullable

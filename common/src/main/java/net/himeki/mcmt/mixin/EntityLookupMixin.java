@@ -15,7 +15,7 @@ import net.minecraft.world.level.entity.EntityLookup;
 
 @Mixin(EntityLookup.class)
 public abstract class EntityLookupMixin<T extends EntityAccess> {
-	
+    
     @Shadow
     @Final
     @Mutable
@@ -23,6 +23,6 @@ public abstract class EntityLookupMixin<T extends EntityAccess> {
 
     @Inject(method = "<init>",at = @At("TAIL"))
     private void replaceConVars(CallbackInfo ci) {
-    	byId = new Int2ObjectConcurrentHashMap<>();
+        byId = new Int2ObjectConcurrentHashMap<>();
     }
 }

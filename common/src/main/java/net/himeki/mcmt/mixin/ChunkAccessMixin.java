@@ -13,8 +13,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.chunk.ChunkAccess;
 
 @Mixin(ChunkAccess.class)
-public class ChunkAccessMixin {
-	
+public abstract class ChunkAccessMixin {
+    
     @Shadow
     @Final
     @Mutable

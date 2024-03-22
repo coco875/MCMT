@@ -15,7 +15,7 @@ import net.minecraft.world.level.chunk.storage.SectionStorage;
 
 @Mixin(SectionStorage.class)
 public abstract class SectionStorageMixin<R> implements AutoCloseable {
-	
+    
     @Shadow
     @Final
     @Mutable

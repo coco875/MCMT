@@ -29,7 +29,7 @@ public class MCMTForge {
     
     @SubscribeEvent
     public void onRegisterCommands(RegisterCommandsEvent event) {
-    	CommandDispatcher<CommandSourceStack> commandDispatcher = event.getDispatcher();
+        CommandDispatcher<CommandSourceStack> commandDispatcher = event.getDispatcher();
         ConfigCommand.register(commandDispatcher);
     }
 }

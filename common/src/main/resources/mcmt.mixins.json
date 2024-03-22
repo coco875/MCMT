@@ -30,6 +30,7 @@
     "ServerLevelMixin",
     "SyncAllMixin",
     "TickingTrackerMixin",
+    "ThreadingDetectorMixin",
     "UtilMixin",
     "WalkNodeEvaluatorMixin"
   ],

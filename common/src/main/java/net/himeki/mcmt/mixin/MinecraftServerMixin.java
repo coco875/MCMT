@@ -33,8 +33,8 @@ public abstract class MinecraftServerMixin extends ReentrantBlockableEventLoop<T
     private Map<ResourceKey<Level>, ServerLevel> levels;
 
     public MinecraftServerMixin(String p_18765_) {
-		super(p_18765_);
-	}
+        super(p_18765_);
+    }
 
     @Inject(method = "tickChildren", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/MinecraftServer;getFunctions()Lnet/minecraft/server/ServerFunctionManager;"))
     private void preTick(BooleanSupplier shouldKeepTicking, CallbackInfo ci) {
@@ -43,7 +43,7 @@ public abstract class MinecraftServerMixin extends ReentrantBlockableEventLoop<T
 
     @Inject(method = "tickChildren", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/profiling/ProfilerFiller;popPush(Ljava/lang/String;)V", ordinal = 1))
     private void postTick(BooleanSupplier shouldKeepTicking, CallbackInfo ci) {
-    	ParallelProcessor.postTick((MinecraftServer) (Object) this);
+        ParallelProcessor.postTick((MinecraftServer) (Object) this);
     }
 
     @Redirect(method = "tickChildren", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;tick(Ljava/util/function/BooleanSupplier;)V"))

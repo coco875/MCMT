@@ -15,11 +15,11 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 
 @Mixin(AttributeInstance.class)
 public class AttributeInstanceMixin {
-	
+    
     @Mutable
     @Shadow
     @Final
-	Map<UUID, AttributeModifier> modifierById = ConcurrentCollections.newHashMap();
+    Map<UUID, AttributeModifier> modifierById = ConcurrentCollections.newHashMap();
     
     @Mutable
     @Shadow

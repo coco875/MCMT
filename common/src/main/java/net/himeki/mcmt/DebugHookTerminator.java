@@ -74,13 +74,13 @@ public class DebugHookTerminator {
     public static String mainThread = "Server thread";
 
     public static void chunkLoadDrive(ServerChunkCache.MainThreadExecutor executor, BooleanSupplier isDone, ServerChunkCache scp, CompletableFuture<Either<ChunkAccess, ChunkHolder.ChunkLoadingFailure>> completableFuture, long chunkpos) {
-		/*
-		if (!GeneralConfig.enableChunkTimeout) {
-			bypassLoadTarget = false;
-			executor.driveUntil(isDone);
-			return;
-		}
-		*/
+        /*
+        if (!GeneralConfig.enableChunkTimeout) {
+            bypassLoadTarget = false;
+            executor.driveUntil(isDone);
+            return;
+        }
+        */
         GeneralConfig config = MCMT.config;
         int failcount = 0;
         if (Thread.currentThread().getName().equals(mainThread)) {
@@ -115,17 +115,17 @@ public class DebugHookTerminator {
                             // SCIENCE
                             completableFuture.complete(Either.left(out));
                             /* */
-							/* 1.15.2 code; AKA the only thing that changed
-							// Generate a new empty chunk
-							// Null is legal here as it's literally not used
-							SingleBiomeProviderSettings sbps = new SingleBiomeProviderSettings(null);
-							sbps.setBiome(Registry.BIOME.getOrDefault(null));
-							BiomeProvider bp = new SingleBiomeProvider(sbps);
-							Chunk out = new Chunk(scp.world, new ChunkPos(chunkpos),
-									new BiomeContainer(new ChunkPos(chunkpos), bp));
-							// SCIENCE
-							completableFuture.complete(Either.left(out));
-							/* */
+                            /* 1.15.2 code; AKA the only thing that changed
+                            // Generate a new empty chunk
+                            // Null is legal here as it's literally not used
+                            SingleBiomeProviderSettings sbps = new SingleBiomeProviderSettings(null);
+                            sbps.setBiome(Registry.BIOME.getOrDefault(null));
+                            BiomeProvider bp = new SingleBiomeProvider(sbps);
+                            Chunk out = new Chunk(scp.world, new ChunkPos(chunkpos),
+                                    new BiomeContainer(new ChunkPos(chunkpos), bp));
+                            // SCIENCE
+                            completableFuture.complete(Either.left(out));
+                            /* */
                         } else {
                             try {
                                 CompoundTag cnbt = scp.chunkMap.read(new ChunkPos(chunkpos)).get().get();

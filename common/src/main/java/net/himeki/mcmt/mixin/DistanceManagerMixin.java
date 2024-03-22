@@ -20,11 +20,11 @@ import net.minecraft.util.SortedArraySet;
 @Mixin(DistanceManager.class)
 public abstract class DistanceManagerMixin {
 
-    @Shadow
-    @Final
-    @Mutable
-	Long2ObjectOpenHashMap<SortedArraySet<Ticket<?>>> tickets = new Long2ObjectOpenConcurrentHashMap<>();
-	   
+    // @Shadow
+    // @Final
+    // @Mutable
+    // Long2ObjectOpenHashMap<SortedArraySet<Ticket<?>>> tickets = new Long2ObjectOpenConcurrentHashMap<>();
+       
     @Shadow
     @Final
     @Mutable

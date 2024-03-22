@@ -8,18 +8,18 @@ Paste the contents of this example config:
 
 ```toml
 [[filters]]
-	name = "custom"
-	priority = 10
+    name = "custom"
+    priority = 10
 
-	[filters.pools]
+    [filters.pools]
 
-		[filters.pools.primary]
-			name = "LEGACY"
-			params = {}
+        [filters.pools.primary]
+            name = "LEGACY"
+            params = {}
 
-	[filters.targets]
-		blacklist = ["com.example.Entity"]
-		whitelist = []
+    [filters.targets]
+        blacklist = ["com.example.Entity"]
+        whitelist = []
 
 ```
 

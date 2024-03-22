@@ -36,53 +36,53 @@ package net.himeki.mcmt.forge.syncfu;
  */
 public class SyncFuLocator {// extends AbstractJarFileLocator {
 
-	// private static final Logger LOGGER = LogManager.getLogger();
-	// private static final Marker M_LOCATOR = MarkerManager.getMarker("LOCATE");
-	// 
-	// @Override
-	// public List<IModFile> scanMods() {
-	// 	LOGGER.info(M_LOCATOR, "Prepping locator...");
-	// 	List<IModFile> out = new ArrayList<>();
-	// 	try {
-	// 		CodeSource src = SyncFuLocator.class.getProtectionDomain().getCodeSource();
-	// 		URL jar = src.getLocation();
-	// 		if (!jar.toString().endsWith(".jar")) {
-	// 			LOGGER.warn(M_LOCATOR, "This be dev!!!");
-	// 			return out;
-	// 		}
-	// 		URI uri = new URI("jar:".concat(jar.toString()).concat("!/"));
-	// 		//Thanks SO https://stackoverflow.com/a/48298758
-	// 		for (FileSystemProvider provider: FileSystemProvider.installedProviders()) {
-	// 	        if (provider.getScheme().equalsIgnoreCase("jar")) {
-	// 	            try {
-	// 	                provider.getFileSystem(uri);
-	// 	            } catch (FileSystemNotFoundException e) {
-	// 	                // in this case we need to initialize it first:
-	// 	                provider.newFileSystem(uri, Collections.emptyMap());
-	// 	            }
-	// 	        }
-	// 	    }
-	//         Path myPath = Paths.get(uri);
-	//         System.out.println(myPath);
-	//         Stream<Path> walk = Files.walk(myPath, 1).peek(p -> LOGGER.warn(M_LOCATOR, "Found {}", p)).filter(p -> p.toString().endsWith(".jar"));
-	//         for (Iterator<Path> it = walk.iterator(); it.hasNext();){
-	//         	Path file = it.next();
-	//         	LOGGER.info(M_LOCATOR, "Found target jar: {}", file);
-	//             out.add(ModFile.newFMLInstance(file, this));
-	//         }
-	// 	} catch (Exception e) {
-	// 		e.printStackTrace();
-	// 	}
-	// 	LOGGER.info(M_LOCATOR, "Locator complete!!!");
-	// 	return out;
-	// }
+    // private static final Logger LOGGER = LogManager.getLogger();
+    // private static final Marker M_LOCATOR = MarkerManager.getMarker("LOCATE");
+    // 
+    // @Override
+    // public List<IModFile> scanMods() {
+    //     LOGGER.info(M_LOCATOR, "Prepping locator...");
+    //     List<IModFile> out = new ArrayList<>();
+    //     try {
+    //         CodeSource src = SyncFuLocator.class.getProtectionDomain().getCodeSource();
+    //         URL jar = src.getLocation();
+    //         if (!jar.toString().endsWith(".jar")) {
+    //             LOGGER.warn(M_LOCATOR, "This be dev!!!");
+    //             return out;
+    //         }
+    //         URI uri = new URI("jar:".concat(jar.toString()).concat("!/"));
+    //         //Thanks SO https://stackoverflow.com/a/48298758
+    //         for (FileSystemProvider provider: FileSystemProvider.installedProviders()) {
+    //             if (provider.getScheme().equalsIgnoreCase("jar")) {
+    //                 try {
+    //                     provider.getFileSystem(uri);
+    //                 } catch (FileSystemNotFoundException e) {
+    //                     // in this case we need to initialize it first:
+    //                     provider.newFileSystem(uri, Collections.emptyMap());
+    //                 }
+    //             }
+    //         }
+    //         Path myPath = Paths.get(uri);
+    //         System.out.println(myPath);
+    //         Stream<Path> walk = Files.walk(myPath, 1).peek(p -> LOGGER.warn(M_LOCATOR, "Found {}", p)).filter(p -> p.toString().endsWith(".jar"));
+    //         for (Iterator<Path> it = walk.iterator(); it.hasNext();){
+    //             Path file = it.next();
+    //             LOGGER.info(M_LOCATOR, "Found target jar: {}", file);
+    //             out.add(ModFile.newFMLInstance(file, this));
+    //         }
+    //     } catch (Exception e) {
+    //         e.printStackTrace();
+    //     }
+    //     LOGGER.info(M_LOCATOR, "Locator complete!!!");
+    //     return out;
+    // }
 
-	// @Override
-	// public String name() {
-	// 	return "sync_fu_bundle";
-	// }
+    // @Override
+    // public String name() {
+    //     return "sync_fu_bundle";
+    // }
 
-	// @Override
-	// public void initArguments(Map<String, ?> arguments) {}
-	
+    // @Override
+    // public void initArguments(Map<String, ?> arguments) {}
+    
 }

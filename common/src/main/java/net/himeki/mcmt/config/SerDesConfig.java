@@ -139,8 +139,8 @@ public class SerDesConfig {
                 List<?> list = (List<?>) t;
                 for (Object s : list) {
                     if (!(s instanceof String && ((String) s).matches(validatorRegex))) {
-//						System.out.println("Value: " + t.toString() + " | String: " + (s instanceof String) + " | Matches: " +
-//								(s instanceof String ? ((String)s).matches(validatorRegex) : "invalid"));
+//                        System.out.println("Value: " + t.toString() + " | String: " + (s instanceof String) + " | Matches: " +
+//                                (s instanceof String ? ((String)s).matches(validatorRegex) : "invalid"));
 
                         return false;
                     }

@@ -60,7 +60,7 @@ public class ParallelProcessor {
     }
 
     public static void onThreadException(Thread t, Throwable e) {
-    	e.getCause().printStackTrace(System.out);
+        e.getCause().printStackTrace(System.out);
     }
 
     /**

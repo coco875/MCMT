@@ -15,7 +15,7 @@ import net.minecraft.world.level.entity.EntitySectionStorage;
 
 @Mixin(EntitySectionStorage.class)
 public abstract class EntitySectionStorageMixin<T extends EntityAccess> {
-	
+    
     @Shadow
     @Final
     @Mutable

@@ -22,11 +22,11 @@ import net.minecraft.world.level.chunk.ImposterProtoChunk;
 
 @Mixin(Level.class)
 public abstract class LevelMixin implements LevelAccessor, AutoCloseable {
-	
-	@SuppressWarnings("deprecation")
-	@Shadow
-	public RandomSource random = RandomSource.createThreadSafe();
-	
+    
+    @SuppressWarnings("deprecation")
+    @Shadow
+    public RandomSource random = RandomSource.createThreadSafe();
+    
     @Shadow
     @Final
     @Mutable
@@ -35,7 +35,7 @@ public abstract class LevelMixin implements LevelAccessor, AutoCloseable {
     @Inject(method = "tickBlockEntities", at = @At(value = "INVOKE", target = "Ljava/util/List;iterator()Ljava/util/Iterator;"))
     private void postEntityPreBlockEntityTick(CallbackInfo ci) {
         if ((Object) this instanceof ServerLevel) {
-        	ServerLevel thisWorld = (ServerLevel) (Object) this;
+            ServerLevel thisWorld = (ServerLevel) (Object) this;
             ParallelProcessor.postEntityTick(thisWorld);
             ParallelProcessor.preBlockEntityTick(thisWorld);
         }
@@ -44,14 +44,14 @@ public abstract class LevelMixin implements LevelAccessor, AutoCloseable {
     @Inject(method = "tickBlockEntities", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/profiling/ProfilerFiller;pop()V"))
     private void postBlockEntityTick(CallbackInfo ci) {
         if ((Object) this instanceof ServerLevel) {
-        	ServerLevel thisWorld = (ServerLevel) (Object) this;
-        	ParallelProcessor.postBlockEntityTick(thisWorld);
+            ServerLevel thisWorld = (ServerLevel) (Object) this;
+            ParallelProcessor.postBlockEntityTick(thisWorld);
         }
     }
     
     @Redirect(method = "tickBlockEntities", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/entity/TickingBlockEntity;tick()V"))
     private void overwriteBlockEntityTick(TickingBlockEntity blockEntityTickInvoker) {
-    	ParallelProcessor.callBlockEntityTick(blockEntityTickInvoker, (Level) (Object) this);
+        ParallelProcessor.callBlockEntityTick(blockEntityTickInvoker, (Level) (Object) this);
     }
     
     @Redirect(method = "getBlockEntity", at = @At(value = "INVOKE", target = "Ljava/lang/Thread;currentThread()Ljava/lang/Thread;"))
@@ -61,7 +61,7 @@ public abstract class LevelMixin implements LevelAccessor, AutoCloseable {
 
     @Redirect(method = "getChunk(II)Lnet/minecraft/world/level/chunk/LevelChunk;", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;getChunk(IILnet/minecraft/world/level/chunk/ChunkStatus;)Lnet/minecraft/world/level/chunk/ChunkAccess;"))
     private ChunkAccess getChunk(Level world, int x, int z, ChunkStatus leastStatus, int i, int j) {
-    	ChunkAccess chunk;
+        ChunkAccess chunk;
         long startTime, counter = -1;
         startTime = System.currentTimeMillis();
 

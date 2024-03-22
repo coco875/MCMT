@@ -83,13 +83,13 @@ public class ConcurrentLongLinkedOpenHashSet extends LongLinkedOpenHashSet {
     @Override
     public boolean add(final long k) {
         boolean out = backing.add(k);
-		/*
-		if (!firstDef) {
-			first = k;
-			firstDef = true;
-		}
-		last = k;
-		*/
+        /*
+        if (!firstDef) {
+            first = k;
+            firstDef = true;
+        }
+        last = k;
+        */
         return out;
     }
 
@@ -139,10 +139,10 @@ public class ConcurrentLongLinkedOpenHashSet extends LongLinkedOpenHashSet {
 
     @Override
     public long firstLong() {
-		/*
-		if (backing.size() == 0) throw new NoSuchElementException();
-		return first;
-		*/
+        /*
+        if (backing.size() == 0) throw new NoSuchElementException();
+        return first;
+        */
         return backing.first();
     }
 
@@ -174,23 +174,23 @@ public class ConcurrentLongLinkedOpenHashSet extends LongLinkedOpenHashSet {
 
     @Override
     public long lastLong() {
-		/*
-		if (backing.size() == 0) throw new NoSuchElementException();
-		return last;
-		*/
+        /*
+        if (backing.size() == 0) throw new NoSuchElementException();
+        return last;
+        */
         return backing.last();
     }
 
     @Override
     public boolean remove(final long k) {
-		/*
-		if (k == first) {
-			first = backing.iterator().next();
-		}
-		if (k == last) {
-			last = backing.iterator().next();
-		}
-		*/
+        /*
+        if (k == first) {
+            first = backing.iterator().next();
+        }
+        if (k == last) {
+            last = backing.iterator().next();
+        }
+        */
         return backing.remove(k);
     }
 
