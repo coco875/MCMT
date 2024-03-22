@@ -15,7 +15,7 @@ import net.minecraft.world.level.entity.EntityLookup;
 
 @Mixin(EntityLookup.class)
 public abstract class EntityLookupMixin<T extends EntityAccess> {
-    
+
     @Shadow
     @Final
     @Mutable

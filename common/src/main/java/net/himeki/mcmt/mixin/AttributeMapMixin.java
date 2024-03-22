@@ -14,7 +14,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeMap;
 
 @Mixin(AttributeMap.class)
 public class AttributeMapMixin {
-    
+
     @Mutable
     @Shadow
     @Final

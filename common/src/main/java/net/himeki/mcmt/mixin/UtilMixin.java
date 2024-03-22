@@ -14,7 +14,7 @@ import net.minecraft.Util;
 
 @Mixin(Util.class)
 public class UtilMixin {
-    
+
     //m_201861_
     //lambda$makeExecutor$3
     @Inject(method = "method_28123", at = @At(value = "INVOKE", target = "Ljava/util/concurrent/ForkJoinWorkerThread;setName(Ljava/lang/String;)V"), locals = LocalCapture.CAPTURE_FAILHARD)

@@ -27,7 +27,7 @@ import net.minecraft.world.level.Level;
 public abstract class MinecraftServerMixin extends ReentrantBlockableEventLoop<TickTask> implements CommandSource, AutoCloseable {
     @Shadow
     public abstract ServerLevel overworld();
-    
+
     @Shadow
     @Final
     private Map<ResourceKey<Level>, ServerLevel> levels;
@@ -50,7 +50,7 @@ public abstract class MinecraftServerMixin extends ReentrantBlockableEventLoop<T
     private void overwriteTick(ServerLevel serverWorld, BooleanSupplier shouldKeepTicking) {
         ParallelProcessor.callTick(serverWorld, shouldKeepTicking, (MinecraftServer) (Object) this);
     }
-    
+
     @Redirect(method = "reloadResources", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/MinecraftServer;isSameThread()Z"))
     private boolean onServerExecutionThreadPatch(MinecraftServer minecraftServer) {
         return ParallelProcessor.serverExecutionThreadPatch(minecraftServer);

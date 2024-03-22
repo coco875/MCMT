@@ -24,7 +24,7 @@ public abstract class DistanceManagerMixin {
     // @Final
     // @Mutable
     // Long2ObjectOpenHashMap<SortedArraySet<Ticket<?>>> tickets = new Long2ObjectOpenConcurrentHashMap<>();
-       
+
     @Shadow
     @Final
     @Mutable

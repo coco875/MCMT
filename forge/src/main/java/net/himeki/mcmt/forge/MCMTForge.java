@@ -26,7 +26,7 @@ public class MCMTForge {
     public void onServerStarting(ServerStartingEvent event) {
         StatsCommand.resetAll();
     }
-    
+
     @SubscribeEvent
     public void onRegisterCommands(RegisterCommandsEvent event) {
         CommandDispatcher<CommandSourceStack> commandDispatcher = event.getDispatcher();

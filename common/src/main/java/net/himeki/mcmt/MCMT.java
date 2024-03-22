@@ -15,8 +15,8 @@ public class MCMT {
     public static final String MOD_ID = "mcmt";
     public static final Logger LOGGER = LogManager.getLogger();
     public static GeneralConfig config;
-    
-    public static void init() {        
+
+    public static void init() {
         // This code runs as soon as Minecraft is in a mod-load-ready state.
         // However, some things (like resources) may still be uninitialized.
         // Proceed with mild caution.
@@ -32,6 +32,7 @@ public class MCMT {
         if (System.getProperty("jmt.mcmt.jmx") != null) {
             JMXRegistration.register();
         }
+
 
         StatsCommand.runDataThread();
         SerDesRegistry.init();

@@ -17,7 +17,7 @@ import net.minecraft.world.level.chunk.storage.ChunkStorage;
 
 @Mixin(ChunkMap.class)
 public abstract class ChunkMapMixin extends ChunkStorage implements ChunkHolder.PlayerProvider {
-    
+
     @Shadow
     @Final
     @Mutable

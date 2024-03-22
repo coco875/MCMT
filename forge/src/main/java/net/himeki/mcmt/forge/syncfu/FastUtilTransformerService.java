@@ -57,12 +57,12 @@ public class FastUtilTransformerService  implements ITransformer<ClassNode>, ITr
     private static final Logger LOGGER = LogManager.getLogger();
     private static final Marker M_LOCATOR = MarkerManager.getMarker("LOCATE");
     private boolean isActive = true;
-    
+
     @Override
     public String name() {
         return "sync_fu";
     }
-    
+
     @Override
     public Entry<Set<String>, Supplier<Function<String, Optional<URL>>>> additionalClassesLocator() {
         LOGGER.info("Sync_Fu preparing...");
@@ -76,7 +76,7 @@ public class FastUtilTransformerService  implements ITransformer<ClassNode>, ITr
         })
         .filter(p -> p.contains("fastutil")) // Can add more if necesary;
         .map(Paths::get)
-        .map(path -> { 
+        .map(path -> {
             try {
                 return path.toUri().toURL();
             } catch (Exception e) {
@@ -126,14 +126,14 @@ public class FastUtilTransformerService  implements ITransformer<ClassNode>, ITr
             public Supplier<Function<String, Optional<URL>>> setValue(Supplier<Function<String, Optional<URL>>> value) {
                 throw new IllegalStateException();
             }
-            
+
         };
     }
 
     @SuppressWarnings("rawtypes")
     @Override
     public List<ITransformer> transformers() {
-        
+
         List<ITransformer> out = new ArrayList<>();
         out.add(this);
         // TODO add development testing
@@ -143,9 +143,9 @@ public class FastUtilTransformerService  implements ITransformer<ClassNode>, ITr
 
     int posfilter = Opcodes.ACC_PUBLIC;
     int negfilter = Opcodes.ACC_STATIC | Opcodes.ACC_SYNTHETIC | Opcodes.ACC_NATIVE | Opcodes.ACC_ABSTRACT | Opcodes.ACC_ABSTRACT | Opcodes.ACC_BRIDGE;
-    
+
     private static final Marker marker = MarkerManager.getMarker("JMTSUPERTRANS");
-    
+
     @Override
     public ClassNode transform(ClassNode input, ITransformerVotingContext context) {
         LOGGER.info(marker, "sync_fu " + input.name + " Transformer Called");
@@ -266,10 +266,10 @@ public class FastUtilTransformerService  implements ITransformer<ClassNode>, ITr
         }
         return out;
     }
-    
+
     @Override
     public void initialize(IEnvironment environment) {
-        
+
     }
 
     @Override

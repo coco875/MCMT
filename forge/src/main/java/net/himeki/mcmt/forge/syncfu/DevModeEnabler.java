@@ -22,12 +22,12 @@ import cpw.mods.modlauncher.api.TransformerVoteResult;
 
 public class DevModeEnabler implements ITransformer<ClassNode> {
 
-    
+
     private static final Logger LOGGER = LogManager.getLogger();
     private static final Marker M_LOCATOR = MarkerManager.getMarker("LOCATE");
     private boolean isActive = true;
-    
-    
+
+
     @Override
     public ClassNode transform(ClassNode input, ITransformerVotingContext context) {
         for (MethodNode mn : input.methods) {
@@ -59,5 +59,5 @@ public class DevModeEnabler implements ITransformer<ClassNode> {
         out.add(Target.targetClass("net.minecraft.util.SharedConstants"));
         return out;
     }
-    
+
 }

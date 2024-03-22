@@ -22,16 +22,16 @@ import net.minecraft.world.level.chunk.ImposterProtoChunk;
 
 @Mixin(Level.class)
 public abstract class LevelMixin implements LevelAccessor, AutoCloseable {
-    
+
     @SuppressWarnings("deprecation")
     @Shadow
     public RandomSource random = RandomSource.createThreadSafe();
-    
+
     @Shadow
     @Final
     @Mutable
     private Thread thread;
-    
+
     @Inject(method = "tickBlockEntities", at = @At(value = "INVOKE", target = "Ljava/util/List;iterator()Ljava/util/Iterator;"))
     private void postEntityPreBlockEntityTick(CallbackInfo ci) {
         if ((Object) this instanceof ServerLevel) {
@@ -48,12 +48,12 @@ public abstract class LevelMixin implements LevelAccessor, AutoCloseable {
             ParallelProcessor.postBlockEntityTick(thisWorld);
         }
     }
-    
+
     @Redirect(method = "tickBlockEntities", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/entity/TickingBlockEntity;tick()V"))
     private void overwriteBlockEntityTick(TickingBlockEntity blockEntityTickInvoker) {
         ParallelProcessor.callBlockEntityTick(blockEntityTickInvoker, (Level) (Object) this);
     }
-    
+
     @Redirect(method = "getBlockEntity", at = @At(value = "INVOKE", target = "Ljava/lang/Thread;currentThread()Ljava/lang/Thread;"))
     private Thread overwriteCurrentThread() {
         return this.thread;

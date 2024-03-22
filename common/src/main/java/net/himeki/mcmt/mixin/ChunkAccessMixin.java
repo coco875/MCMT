@@ -14,7 +14,7 @@ import net.minecraft.world.level.chunk.ChunkAccess;
 
 @Mixin(ChunkAccess.class)
 public abstract class ChunkAccessMixin {
-    
+
     @Shadow
     @Final
     @Mutable

@@ -26,7 +26,7 @@ public abstract class LevelTicksMixin<T> implements LevelTickAccess<T> {
     // @Final
     // @Mutable
     // private  Long2LongMap nextTickForContainer = new Long2LongConcurrentHashMap(Long.MAX_VALUE);
-    
+
     @Shadow
     @Final
     @Mutable

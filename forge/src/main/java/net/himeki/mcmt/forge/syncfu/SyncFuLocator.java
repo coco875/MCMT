@@ -26,11 +26,11 @@ package net.himeki.mcmt.forge.syncfu;
 
 /**
  * Is a full spec'd ModLocater
- * 
+ *
  * Unusable for it's intended purpose as it can't be registered as this jar uses the wrong classloader
- * 
+ *
  * @author jediminer543
- * 
+ *
  * @since 0.18.60
  *
  */
@@ -38,7 +38,7 @@ public class SyncFuLocator {// extends AbstractJarFileLocator {
 
     // private static final Logger LOGGER = LogManager.getLogger();
     // private static final Marker M_LOCATOR = MarkerManager.getMarker("LOCATE");
-    // 
+    //
     // @Override
     // public List<IModFile> scanMods() {
     //     LOGGER.info(M_LOCATOR, "Prepping locator...");
@@ -84,5 +84,5 @@ public class SyncFuLocator {// extends AbstractJarFileLocator {
 
     // @Override
     // public void initArguments(Map<String, ?> arguments) {}
-    
+
 }

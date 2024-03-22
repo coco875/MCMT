@@ -191,22 +191,19 @@ public class StatsCommand {
                             mtlog.warn("Number TEs : " + ParallelProcessor.currentTEs.get());
                             mtlog.warn("Number Entities : " + ParallelProcessor.currentEnts.get());
                             mtlog.warn("Number Environments : " + ParallelProcessor.currentEnvs.get());
-                            for (Thread t : Thread.getAllStackTraces().keySet()) {
-                                boolean continue_ = false;
-                                for (StackTraceElement ste : t.getStackTrace()) {
-                                    if (ste.toString().contains("Unsafe.park") || ste.toString().contains("wait") || ste.toString().contains("sleep")) {
-                                        continue_ = true;
-                                        break;
-                                    }
-                                }
-                                if (continue_) {
-                                    continue;
-                                }
-                                mtlog.warn("Thread : " + t.getName());
-                                for (StackTraceElement ste : t.getStackTrace()) {
-                                    mtlog.warn("  " + ste.toString());
-                                }
-                            }
+                            // for (Thread t : Thread.getAllStackTraces().keySet()) {
+                            //     StackTraceElement stes[] = t.getStackTrace();
+                            //     if (stes.length == 0) {
+                            //         continue;
+                            //     }
+                            //     if (stes[0].toString().contains("Unsafe.park")) { //|| stes[0].toString().contains("wait")) { //|| stes[0].toString().contains("sleep")) {
+                            //         continue;
+                            //     }
+                            //     mtlog.warn("Thread : " + t.getName());
+                            //     for (StackTraceElement ste : stes) {
+                            //         mtlog.warn("  " + ste.toString());
+                            //     }
+                            // }
                             mtlog.info("all info above is for debugging");
                             warningDelay *= 1.2;
                             warningDelay = Math.min(warningDelay, Math.max(config.logCap, 1500)); // Max delay ~~ 2 hours
