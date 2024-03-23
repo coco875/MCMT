@@ -16,6 +16,8 @@ dependencies {
     }
 
     modImplementation 'com.electronwill.night-config:toml:3.6.0'
+
+    modImplementation "maven.modrinth:lithium:mc1.19.2-0.11.1"
 }
 
 publishing {

@@ -38,6 +38,6 @@ public class MCMT {
         SerDesRegistry.init();
 
         MCMT.LOGGER.info("MCMT Setting up threadpool...");
-        ParallelProcessor.setupThreadPool(GeneralConfig.getParallelism());
+        ParallelProcessor.setupThreadPool(GeneralConfig.getParallelism(), config);
     }
 }

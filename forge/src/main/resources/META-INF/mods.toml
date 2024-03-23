@@ -4,25 +4,25 @@ loaderVersion = "[43,)"
 license = "Insert License Here"
 
 [[mods]]
-modId = "mcmt"
-version = "${version}"
-displayName = "Example Mod"
-authors = "Me!"
-description = '''
-This is an example description! Tell everyone what your mod is about!
-'''
+    modId = "mcmt"
+    version = "${version}"
+    displayName = "Example Mod"
+    authors = "Me!"
+    description = '''
+    This is an example description! Tell everyone what your mod is about!
+    '''
 #logoFile = ""
 
 [[dependencies.mcmt]]
-modId = "forge"
-mandatory = true
-versionRange = "[43,)"
-ordering = "NONE"
-side = "BOTH"
+    modId = "forge"
+    mandatory = true
+    versionRange = "[43,)"
+    ordering = "NONE"
+    side = "BOTH"
 
 [[dependencies.mcmt]]
-modId = "minecraft"
-mandatory = true
-versionRange = "[1.19.2,)"
-ordering = "NONE"
-side = "BOTH"
+    modId = "minecraft"
+    mandatory = true
+    versionRange = "[1.19.2,)"
+    ordering = "NONE"
+    side = "BOTH"

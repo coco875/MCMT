@@ -45,6 +45,10 @@ allprojects {
         // for more information about repositories.
         maven { url = "https://maven.shedaniel.me/" }
         maven { url = "https://jitpack.io" }
+        maven {
+                name = "Modrinth"
+                url = "https://api.modrinth.com/maven"
+            }
     }
 
     tasks.withType(JavaCompile) {

@@ -37,7 +37,8 @@ public class ParallelProcessor {
     static MinecraftServer mcs;
     static AtomicBoolean isTicking = new AtomicBoolean();
 
-    public static void setupThreadPool(int parallelism) {
+    public static void setupThreadPool(int parallelism, GeneralConfig config) {
+        ParallelProcessor.config = config;
         AtomicInteger worldPoolThreadID = new AtomicInteger();
         AtomicInteger tickPoolThreadID = new AtomicInteger();
         final ClassLoader cl = MCMT.class.getClassLoader();
