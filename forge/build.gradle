@@ -14,7 +14,7 @@ loom {
         convertAccessWideners = true
         extraAccessWideners.add loom.accessWidenerPath.get().asFile.name
         
-        mixinConfig "mcmt.mixins.json"
+        mixinConfig "mcmt-common.mixins.json"
     }
 }
 
@@ -54,6 +54,7 @@ shadowJar {
 remapJar {
     input.set shadowJar.archiveFile
     dependsOn shadowJar
+    archiveClassifier.set("forge")
 }
 
 sourcesJar {

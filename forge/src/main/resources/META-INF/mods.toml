@@ -6,7 +6,7 @@ license = "Insert License Here"
 [[mods]]
     modId = "mcmt"
     version = "${version}"
-    displayName = "Example Mod"
+    displayName = "MCMT - Minecraft Multi-Threaded"
     authors = "Me!"
     description = '''
     This is an example description! Tell everyone what your mod is about!
